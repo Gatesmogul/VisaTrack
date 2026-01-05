@@ -1,6 +1,5 @@
  @import url(variable.css);
- @import url(Pages/signIn.css);
- @import url(Pages/signUp.css);
+@import url(Pages/signUpandsignIn.css);
  @import url(Components/header.css);
  @import url(Components/buttons.css);
 
