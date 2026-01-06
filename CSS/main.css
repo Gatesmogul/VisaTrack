@@ -12,14 +12,13 @@
   --primary: #a2aab8;
   --text-dark: #1f2937;
   --text-muted: #6b7280;
-  --border-light: #e5e7eb;
-  --alert-bg: #f9fabe;
+  --border-light: #e4f1ff;
+  --alert-bg: #ede7d1;
   --alert-border: #fed7aa;
 }
 
 body {
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-    Ubuntu, sans-serif;
+  font-family: "Segoe UI", Arial, Helvetica, sans-serif, Roboto;
   background-color: var(--bg-color);
   color: var(--text-dark);
   line-height: 1.6;
@@ -39,23 +38,24 @@ body {
 .visa-card header {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 0.75rem;
   margin-bottom: 0;
 }
 
 .visa-card header h1 {
-  font-size: 1.75rem;
+  font-size: 1.65rem;
   font-weight: 700;
 }
 
 .icon {
-  width: 80px;
-  height: 20px;
+  width: 90px;
+  height: 60px;
 }
 .divider {
   border: none;
   height: 1px;
-  background-color: var(--primary);
+  background-color: var(--border-light);
   margin: 0 0 1.25rem;
 }
 .visa-info {
@@ -100,15 +100,16 @@ body {
   height: 18px;
   margin-top: 2px;
 }
+
 .timeline h2 {
   font-size: 1rem;
   margin-bottom: 1rem;
   font-weight: 700;
 }
 .timeline-item {
-  border-left: 2px solid var(--border-light);
+  border-left: 2px solid #4da3ff;
   padding-left: 1rem;
-  margin-bottom: 1.25rem;
+  margin-bottom: 1rem;
   position: relative;
 }
 
@@ -118,11 +119,17 @@ body {
   height: 10px;
   background-color: var(--primary);
   border-radius: 50%;
+  border: 2px solid #e5e7eb;
   position: absolute;
-  left: -6px;
-  top: 6px;
+  left: -8px;
 }
-
+.timeline-item.completed::before {
+  background-color: #4da3ff;
+  border-color: #4da3ff;
+}
+.timeline-item.upcoming::before {
+  background-color: var(--card-bg);
+}
 .timeline-item h3 {
   font-size: 0.95rem;
   font-weight: 600;
@@ -148,6 +155,10 @@ body {
 .timeline-item li {
   margin-bottom: 0.25rem;
 }
+.item {
+  background: var(--border-light);
+  padding: 10px;
+}
 .reminder {
   background-color: var(--alert-bg);
   border: 1px solid var(--border-light);
@@ -170,4 +181,54 @@ body {
 }
 .icon-rem {
   width: 10px;
+}
+.btn {
+  width: 100%;
+  padding: 0.6rem;
+  border-radius: 10px;
+  font-size: 0.8rem;
+  margin-top: 0.5rem;
+  border: none;
+  cursor: pointer;
+}
+.btn.primary:hover {
+  background-color: #4da3ff;
+}
+.btn.secondary:hover {
+  background-color: #4da3ff;
+}
+.btn.primary {
+  background: var(--bg-color);
+  border: 1px solid #4da3ff;
+}
+
+.btn.secondary {
+  background: var(--bg-color);
+  border: 1px solid #4da3ff;
+  margin-bottom: 0.5rem;
+}
+
+.bottom-nav {
+  position: relative;
+  bottom: 0;
+  background: #fff;
+  display: flex;
+  justify-content: space-evenly;
+  padding: 0.5rem 0.3rem;
+  margin-top: 1rem;
+  border-top: 1px solid var(--border-light);
+}
+
+.nav-item {
+  font-size: 0.75rem;
+}
+
+.nav-item.active {
+  color: var(--primary);
+  font-weight: 700;
+}
+.bottom-nav img {
+  width: 20px;
+  height: 20px;
+  filter: grayscale(100%) brightness(0.6);
 }
