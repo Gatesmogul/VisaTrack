@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Trip Planner - VisaTrack</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="CSS/Pages/trip.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <img src="basil_location-solid.png" alt="Location">
+      <h1>Trip Planner</h1>
+      <!-- Mobile hamburger - appears on small screens -->
+      <button class="hamburger" aria-label="Open menu" aria-expanded="false" type="button">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+      <nav class="top-nav" aria-label="Main navigation">
+        <a class="nav-link" href="index.html" aria-label="Home">
+         <img src="Vector (2).png" alt="Home">
+          Home
+        </a>
+        <a class="nav-link" href="trips.html" aria-label="Trips">
+         <img src="Vector (1).png" alt="trip">
+          Trips
+        </a>
+        <a class="nav-link" href="#" aria-label="Track">
+          <img src="Group.png" alt="Location"> Track
+        </a>
+        <a class="nav-link" href="#" aria-label="Profile">
+          <img src="Vector.png" alt="Profile">
+          Profile
+        </a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="app">
+    <section class="trip-name">
+      <label for="tripName">Trip Name</label>
+      <input id="tripName" placeholder="Europe Summer 2026" />
+    </section>
+
+    <section id="destinations" class="destinations">
+      <!-- Country card template -->
+      <article class="country-card" data-country="France">
+        <div class="card-header">
+          <div class="flag"><img class="flag-img" src="ASSETS/Icons/flags/flag-fr.svg" alt="flag"/></div>
+          <div class="country-title" contenteditable="true">France</div>
+          <select class="country-select" aria-label="Choose country">
+            <option value="France" data-flag="ASSETS/Icons/flags/flag-fr.svg">France</option>
+            <option value="Germany" data-flag="ASSETS/Icons/flags/flag-de.svg">Germany</option>
+            <option value="Italy" data-flag="ASSETS/Icons/flags/flag-it.svg">Italy</option>
+          </select>
+          <div class="card-controls">
+            <button class="add-btn">+</button>
+            <button class="remove-btn">−</button>
+          </div>
+        </div>
+
+        <div class="card-body">
+          <div class="dates">
+            <div class="date-item">
+              <label>Entry Date</label>
+              <input type="date" class="entry" value="2026-01-01" />
+            </div>
+            <div class="date-item">
+              <label>Exit Date</label>
+              <input type="date" class="exit" value="2026-01-07" />
+            </div>
+          </div>
+
+          <div class="purpose">
+            <label>Purpose</label>
+            <select class="purpose-select">
+              <option>Tourism</option>
+              <option>Business</option>
+              <option>Study</option>
+            </select>
+          </div>
+
+          <div class="visa-info">
+            <span class="visa-pill">• Visa-Free</span>
+            <span class="days">90 days allowed</span>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <div class="main-controls">
+      <button id="addDestination" class="add-destination">+ Add Another Destination</button>
+    </div>
+
+    <aside class="sidebar">
+      <section class="feasibility">
+        <header>
+          <div class="warn"> <img src="emojione-v1_warning.png" alt="warning"> Trip Feasibility Check</div>
+        </header>
+        <ul>
+          <li>All Visa requirements can be met</li>
+          <li>No timeline conflict detected</li>
+          <li>Estimated total Visa cost: $0</li>
+        </ul>
+      </section>
+
+      <div class="save-wrap">
+        <button id="saveTrip" class="save-btn">Save Trip</button>
+      </div>
+    </aside>
+  </main>
+
+ 
+  <script type="module" src="JS/Pages/trip.js"></script>
+</body>
+</html>
