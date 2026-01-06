@@ -1,4 +1,8 @@
-@import url(variable.css);
+ @import url(variable.css);
+ @import url(Pages/signUpandsignIn.css);
+ @import url(Pages/allforgetpasswordforgetpassword.css);
+ @import url(Components/header.css);
+ @import url(Components/buttons.css);
 
 * {
   margin: 0;
