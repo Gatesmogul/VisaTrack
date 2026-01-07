@@ -1,0 +1,115 @@
+* {
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+}
+
+body {
+  background: #f5f7fa;
+  margin: 0;
+  padding: 20px;
+  min-height: 100vh;
+}
+.container {
+  max-width: 420px;
+  width: 100%;
+  min-height: calc(100vh - 40px);
+  margin: 0 auto;
+  background: #fff;
+  padding: 20px;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+.title {
+  text-align: center;
+  margin-bottom: 25px;
+}
+
+.timeline {
+  position: relative;
+}
+
+.step {
+  display: flex;
+  align-items: flex-start;
+  position: relative;
+  padding-bottom: 30px;
+}
+
+.step::before {
+  content: "";
+  position: absolute;
+  left: 14px;
+  top: 32px;
+  width: 2px;
+  height: 48px;
+  background: #dcdcdc;
+}
+.step:last-child::before {
+  display: none;
+}
+
+.icon {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 2px solid #ccc;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 15px;
+  font-size: 14px;
+  transition: all 0.3s ease;
+}
+
+.step[data-state="pending"] .icon {
+  border-color: #ccc;
+  background: #fff;
+}
+
+.step[data-state="active"] .icon {
+  border-color: #3498db;
+}
+
+.step[data-state="completed"] .icon {
+  background: #2ecc71;
+  border-color: #2ecc71;
+  color: #fff;
+}
+
+.step[data-state="completed"]::before {
+  background: #2ecc71;
+}
+
+.content h4 {
+  margin: 0 0 4px;
+}
+
+.time {
+  font-size: 13px;
+  color: #666;
+}
+
+.hidden {
+  display: none;
+}
+
+button {
+  width: 100%;
+  padding: 12px;
+  border: none;
+  background: #3498db;
+  color: #fff;
+  font-size: 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-top: auto;
+  margin-bottom: 50px;
+}
+
+button:hover {
+  background: #2f89c5;
+}
