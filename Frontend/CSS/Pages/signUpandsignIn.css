@@ -26,6 +26,10 @@ input {
   margin-bottom: 2rem;
 }
 
+input[type="checkbox"]{
+  width: auto;
+}
+
 input:active {
   border: 1px solid #4da3ff;
 }
@@ -106,4 +110,58 @@ label {
   height: 100%;
   width: 100%;
   border-radius: 0.2rem;
+}
+
+/* Terms & Conditions designs */
+.tc--header{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #D9D9D9;
+}
+
+.tc--header p, .main{
+  font-size: 2rem;
+  font-family: "Montserrat", sans-serif;
+  font-weight: 700;
+}
+
+.main {
+  font-size: 2.4rem;
+  font-weight: 800;
+}
+
+.main-sub{
+  font-family: "Inter", sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  margin-top: 1rem;
+}
+
+.tc--main .headings{
+  font-family: "Inter", sans-serif;
+  font-size: 2rem;
+  font-weight: 700;
+  margin-top: 1rem;
+}
+
+.tc--main .sub-heading{
+  font-family: "Inter", sans-serif;
+  font-size: 1.4rem;
+  font-weight: 500;
+  margin-top: 1rem;
+}
+
+.form-1{
+  margin-top: 1rem;
+}
+.form-1 input[type="checkbox"]{
+  margin-right: 1rem;
+}
+
+.buttons{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  margin-top: 2rem;
 }
