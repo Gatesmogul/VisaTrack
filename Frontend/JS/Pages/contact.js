@@ -1,4 +1,4 @@
-/* COUNTRY CODES */
+/* update to relevant countries*/
 const countries = [
   { name: "Nigeria", code: "+234" },
   { name: "United States", code: "+1" },

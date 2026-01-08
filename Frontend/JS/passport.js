@@ -7,7 +7,7 @@ const passportGroup = document.getElementById("passportGroup");
 const countryGroup = document.getElementById("countryGroup");
 const issueDateGroup = document.getElementById("issueDateGroup");
 const expiryDateGroup = document.getElementById("expiryDateGroup");
-
+/* update to relevant countries*/
 const countries = [
   "Nigeria",
   "United States",
