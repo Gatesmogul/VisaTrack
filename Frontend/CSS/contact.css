@@ -20,7 +20,6 @@ body {
   flex-direction: column;
 }
 
-/* HEADER */
 .form-header {
   display: grid;
   grid-template-columns: 36px 1fr 36px;
