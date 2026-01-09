@@ -1,0 +1,52 @@
+
+.tripsaved-1{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-top: 1rem;
+}
+.trip-main-text{
+  font-family: "Inter", sans-serif;
+  font-size: 2.6rem;
+  font-weight: 700;
+}
+.trip-sub-text, li{
+  font-family: "Inter", sans-serif;
+  font-size: 1.2rem;
+  text-align: center;
+}
+.tripsaved-1 .trip-sub-text{
+  margin: 0 2rem;
+}
+.texsaved{
+  flex-grow: 1;
+  display: flex;
+  justify-content: space-between;
+}
+.tripsaved-2{
+  border: 1px solid rgba(0, 0, 0, 0.557);
+  margin: 2rem 3rem;
+  padding: 1rem 1.5rem;
+}
+.tripsaved-2 .trip-main-text{
+  font-size: 2rem;
+  text-align: center;
+  margin-bottom: 1rem;
+}
+ul{
+  list-style-position: inside;
+}
+li{
+  text-align: left;
+}
+.saved-button{
+  width: 100%;
+  height: 5rem;
+  border-radius: 1rem;
+  font-family: "Inter", sans-serif;
+  font-weight: 500;
+  font-size: 1.5rem;
+  outline: none;
+  border: 1px solid rgba(0, 0, 0, 0.546);
+}
