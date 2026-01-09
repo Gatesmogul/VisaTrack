@@ -1,25 +1,13 @@
-import { auth } from "@/firebase/firebase.config";
-import { syncUser } from "@/services/user.service";
+//app/_layout.tsx
 import { Stack } from "expo-router";
-import { onAuthStateChanged } from "firebase/auth";
-import { useEffect } from "react";
+import _layout from "./(tabs)/_layout";
+import app from ".";
 
 export default function RootLayout() {
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (user) => {
-      if (user) {
-        await syncUser({
-          firebaseUid: user.uid,
-          email: user.email!,
-          fullName: user.displayName || "",
-        });
-      }
-    });
-
-    return unsubscribe;
-  }, []);
-
   return (
-    <Stack screenOptions={{ headerShown: false }} />
+    <Stack screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="index" />
+      <Stack.Screen name="(tabs)" />
+    </Stack>
   );
 }
