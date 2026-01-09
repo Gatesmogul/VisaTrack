@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Contact & Identity</title>
+    <link rel="stylesheet" href="CSS/contact.css" />
+  </head>
+  <body>
+    <main class="form-container">
+      <header class="form-header">
+        <button class="back-btn" aria-label="Back">←</button>
+
+        <div class="header-text">
+          <h1>Contact & Identity</h1>
+          <p class="step-text">Step 2 of 3</p>
+        </div>
+      </header>
+
+      <div class="progress-bar">
+        <span class="progress"></span>
+        <span class="progress"></span>
+        <span class="progress"></span>
+      </div>
+
+      <hr class="divider" />
+
+      <form id="contactForm" novalidate>
+        <div class="form-group">
+          <label class="photo-label">Profile photo</label>
+
+          <div class="photo-upload">
+            <div class="photo-avatar" id="avatar">📷</div>
+
+            <div class="photo-controls">
+              <label class="upload-btn">
+                Upload photo
+                <input type="file" id="photoInput" accept="image/*" />
+              </label>
+              <small>JPG or PNG, max 2MB</small>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group" id="emailGroup">
+          <label>Email Address <span>*</span></label>
+
+          <div class="input-wrapper">
+            <span class="icon">✉</span>
+            <input
+              type="email"
+              id="email"
+              placeholder="your.email@example.com"
+            />
+          </div>
+
+          <p class="error-text">Please enter a valid email address</p>
+        </div>
+
+        <div class="form-group" id="phoneGroup">
+          <label>Phone Number <span>*</span></label>
+
+          <div class="phone-input">
+            <select id="countryCode"></select>
+
+            <div class="input-wrapper">
+              <span class="icon">📞</span>
+              <input type="tel" id="phone" placeholder="123 456 7890" />
+            </div>
+          </div>
+
+          <p class="error-text">Phone number must be at least 10 digits</p>
+        </div>
+
+        <div class="verification-alert" id="verificationBox">
+          <strong>Verification Required</strong>
+          <p>
+            We’ll send a verification code to confirm your email and phone
+            number.
+          </p>
+        </div>
+
+        <div class="form-actions">
+          <button type="button" class="btn secondary">Prev</button>
+          <button type="submit" class="btn primary">Next</button>
+        </div>
+      </form>
+    </main>
+
+    <script src="JS/Pages/contact.js"></script>
+  </body>
+</html>

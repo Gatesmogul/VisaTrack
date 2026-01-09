@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Visa Application Timeline</title>
+    <link rel="stylesheet" href="CSS/timeline.css" />
+  </head>
+  <body>
+    <div class="container">
+      <h2 class="title">Visa Application Timeline</h2>
+      <div class="timeline">
+        <div class="step" data-step="submitted" data-state="pending">
+          <div class="icon"></div>
+          <div class="content">
+            <h4>Application Submitted</h4>
+            <p class="time hidden" data-time="submitted"></p>
+          </div>
+        </div>
+        <div class="step" data-step="review" data-state="pending">
+          <div class="icon"></div>
+          <div class="content">
+            <h4>Documents Under Review</h4>
+            <p>Your documents are being reviewed.</p>
+            <p class="time hidden" data-time="review"></p>
+          </div>
+        </div>
+        <div class="step" data-step="interview" data-state="pending">
+          <div class="icon"></div>
+          <div class="content">
+            <h4>Interview Scheduled</h4>
+            <p class="time hidden" data-time="interview"></p>
+          </div>
+        </div>
+
+        <!-- Step 4 -->
+        <div class="step" data-step="approved" data-state="pending">
+          <div class="icon"></div>
+          <div class="content">
+            <h4>Application Approved</h4>
+            <p class="time hidden" data-time="approved"></p>
+          </div>
+        </div>
+      </div>
+
+      <button id="backBtn">Back to home</button>
+    </div>
+
+    <script src="JS/Pages/timeline.js"></script>
+  </body>
+</html>

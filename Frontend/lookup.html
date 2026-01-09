@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Visa Lookup</title>
+    <link rel="stylesheet" href="CSS/lookup.css" />
+  </head>
+  <body>
+    <main class="app-container">
+      <header class="page-header">
+        <button class="back-btn" id="backBtn">←</button>
+        <h1>Visa Lookup</h1>
+      </header>
+      <section class="lookup-form">
+        <div class="form-group">
+          <label>I hold a passport from</label>
+          <select class="select-input" id="passportFrom">
+            <option value="">Select country</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>I am travelling to</label>
+          <select class="select-input" id="travelTo">
+            <option value="">Select destination</option>
+          </select>
+        </div>
+      </section>
+    </main>
+    <nav class="bottom-nav">
+      <button class="nav-item active" data-page="home">
+        <span>🏠</span>
+        <small>Home</small>
+      </button>
+
+      <button class="nav-item" data-page="explore">
+        <span>🔍</span>
+        <small>Explore</small>
+      </button>
+      <button class="nav-item nav-center" data-page="new">
+        <div class="center-icon">＋</div>
+        <small>New</small>
+      </button>
+
+      <button class="nav-item" data-page="tracker">
+        <span>📄</span>
+        <small>Tracker</small>
+      </button>
+
+      <button class="nav-item" data-page="profile">
+        <span>👤</span>
+        <small>Profile</small>
+      </button>
+    </nav>
+
+    <script src="JS/lookup.js"></script>
+  </body>
+</html>
