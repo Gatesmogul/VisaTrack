@@ -1,0 +1,10 @@
+{
+  "expo": {
+    "name": "VisaTrack",
+    "slug": "visatrack",
+    "version": "1.0.0",
+    "sdkVersion": "54.0.0",
+    "platforms": ["ios", "android", "web"],
+    "plugins": ["expo-router"]
+  }
+}
