@@ -1,17 +1,9 @@
-/* ===============================
-   VISA TIMELINE FUNCTIONALITY
-   Real Project – No Demo Logic
-================================ */
-
-/* ---------- REMINDERS ---------- */
 const reminderBtn = document.querySelector(".btn.secondary");
 const reminderSection = document.querySelector(".reminder");
 
 let reminders = JSON.parse(localStorage.getItem("visaReminders")) || [];
 
-/* Render reminders safely */
 function renderReminders() {
-  // Remove only dynamically added reminders
   reminderSection
     .querySelectorAll(".dynamic-reminder")
     .forEach((el) => el.remove());
@@ -29,7 +21,6 @@ function renderReminders() {
   });
 }
 
-/* Add reminder (real-time user action) */
 reminderBtn.addEventListener("click", () => {
   const date = prompt("Enter reminder date (e.g. March 10, 2026)");
   if (!date) return;
@@ -42,10 +33,8 @@ reminderBtn.addEventListener("click", () => {
   renderReminders();
 });
 
-/* Initial render */
 renderReminders();
 
-/* ---------- EXPORT TIMELINE ---------- */
 const exportBtn = document.querySelector(".btn.primary");
 
 exportBtn.addEventListener("click", () => {
@@ -81,13 +70,8 @@ exportBtn.addEventListener("click", () => {
   URL.revokeObjectURL(url);
 });
 
-/* ---------- BOTTOM NAV (REAL-TIME ONLY) ---------- */
 const navItems = document.querySelectorAll(".nav-item");
 
-/*
-  Active state exists ONLY while user is on this page.
-  No storage. No memory. No fake persistence.
-*/
 navItems.forEach((item) => {
   item.addEventListener("click", () => {
     navItems.forEach((nav) => nav.classList.remove("active"));
