@@ -54,6 +54,7 @@ h3 {
     justify-content: space-between;
     width: 50%;
     overflow-wrap: break-word;
+    flex-wrap: wrap;
   }
   .search {
     background-color: #fffdfd;
