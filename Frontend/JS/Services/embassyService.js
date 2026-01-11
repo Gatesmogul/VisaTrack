@@ -1,4 +1,4 @@
-import { API_BASE_URL } from "./apiConfig.js";
+import apiClient from "./apiConfig.js";
 
 /**
  * Fetch all embassies with optional query parameters.
@@ -6,23 +6,9 @@ import { API_BASE_URL } from "./apiConfig.js";
  * @returns {Promise<Array>} List of embassies
  */
 export async function getEmbassies(filters = {}) {
-  const query = new URLSearchParams(filters).toString();
-  const url = `${API_BASE_URL}/embassies${query ? `?${query}` : ''}`;
-
   try {
-    const response = await fetch(url, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        // 'Authorization': `Bearer ${token}` // If auth is needed later
-      }
-    });
-
-    if (!response.ok) {
-      throw new Error(`Error fetching embassies: ${response.statusText}`);
-    }
-
-    return await response.json();
+    const response = await apiClient.get('/embassies', { params: filters });
+    return response.data;
   } catch (error) {
     console.error("Embassy Service Error:", error);
     throw error;
@@ -35,14 +21,9 @@ export async function getEmbassies(filters = {}) {
  * @returns {Promise<Object>} Embassy details
  */
 export async function getEmbassyById(id) {
-  const url = `${API_BASE_URL}/embassies/${id}`;
-
   try {
-    const response = await fetch(url);
-    if (!response.ok) {
-      throw new Error(`Error fetching embassy: ${response.statusText}`);
-    }
-    return await response.json();
+    const response = await apiClient.get(`/embassies/${id}`);
+    return response.data;
   } catch (error) {
     console.error("Embassy Service Error:", error);
     throw error;
