@@ -1,9 +1,4 @@
-
-
-import Embassy from '../models/Embassy'
-/**
- * Service to handle Embassy operations
- */
+import Embassy from "../models/Embassy.js";
 
 const createEmbassy = async (data) => {
     try {
@@ -55,7 +50,7 @@ const deleteEmbassy = async (id) => {
     }
 };
 
-module.exports = {
+export {
     createEmbassy,
     getEmbassies,
     getEmbassyById,

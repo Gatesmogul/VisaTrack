@@ -1,16 +1,18 @@
-const express = require('express');
-const router = express.Router();
-const {
+import express from 'express';
+import {
     createEmbassy,
     getEmbassies,
     getEmbassyById,
     updateEmbassy,
     deleteEmbassy
-} = require('../services/embassyService');
+} from '../services/embassy.service.js';
+import { authMiddleware } from '../middlewares/auth.middleware.js';
+
+const router = express.Router();
 
 /**
  * @swagger
- * /embassies:
+ * /embassy:
  *   get:
  *     summary: List all embassies
  *     description: Retrieve a list of embassies with optional filtering.
@@ -28,6 +30,8 @@ const {
  *     summary: Create a new embassy
  *     description: Create a new embassy entry in the directory.
  *     tags: [Embassies]
+ *     security:
+ *       - bearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -41,8 +45,28 @@ const {
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/Embassy'
- * 
- * /embassies/{id}:
+ */
+router.post('/', authMiddleware, async (req, res) => {
+    try {
+        const embassy = await createEmbassy(req.body);
+        res.status(201).json(embassy);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+});
+
+router.get('/', async (req, res) => {
+    try {
+        const embassies = await getEmbassies(req.query);
+        res.json(embassies);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+});
+
+/**
+ * @swagger
+ * /embassy/{id}:
  *   get:
  *     summary: Get embassy by ID
  *     description: Retrieve detailed information about a specific embassy.
@@ -67,6 +91,8 @@ const {
  *     summary: Update embassy
  *     description: Update an existing embassy's information.
  *     tags: [Embassies]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -90,6 +116,8 @@ const {
  *     summary: Delete embassy
  *     description: Remove an embassy from the directory.
  *     tags: [Embassies]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -100,27 +128,6 @@ const {
  *       200:
  *         description: Embassy removed
  */
-// Create embassy
-router.post('/', async (req, res) => {
-    try {
-        const embassy = await createEmbassy(req.body);
-        res.status(201).json(embassy);
-    } catch (error) {
-        res.status(500).json({ message: error.message });
-    }
-});
-
-// Get all embassies (with optional filters)
-router.get('/', async (req, res) => {
-    try {
-        const embassies = await getEmbassies(req.query);
-        res.json(embassies);
-    } catch (error) {
-        res.status(500).json({ message: error.message });
-    }
-});
-
-// Get single embassy
 router.get('/:id', async (req, res) => {
     try {
         const embassy = await getEmbassyById(req.params.id);
@@ -131,8 +138,7 @@ router.get('/:id', async (req, res) => {
     }
 });
 
-// Update embassy
-router.put('/:id', async (req, res) => {
+router.put('/:id', authMiddleware, async (req, res) => {
     try {
         const embassy = await updateEmbassy(req.params.id, req.body);
         if (!embassy) return res.status(404).json({ message: 'Embassy not found' });
@@ -142,8 +148,7 @@ router.put('/:id', async (req, res) => {
     }
 });
 
-// Delete embassy
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', authMiddleware, async (req, res) => {
     try {
         const embassy = await deleteEmbassy(req.params.id);
         if (!embassy) return res.status(404).json({ message: 'Embassy not found' });
@@ -153,4 +158,4 @@ router.delete('/:id', async (req, res) => {
     }
 });
 
-module.exports = router;
+export default router;
