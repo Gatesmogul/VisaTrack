@@ -1,32 +1,36 @@
+// services/user.ts
 import { getFirebaseIdToken } from "../firebase/getIdToken";
 
 const API_URL = process.env.EXPO_PUBLIC_API_URL;
 
 async function authHeaders() {
   const token = await getFirebaseIdToken();
+  if (!token) throw new Error("No auth token");
+
   return {
     "Content-Type": "application/json",
     Authorization: `Bearer ${token}`,
   };
-
-  
 }
 
-type SyncUserPayload = {
-  firebaseUid: string;
+export async function syncUser(payload: {
+  
   email: string;
   fullName?: string;
-  passportCountry?: string;
-};
-
-export async function syncUser(payload: SyncUserPayload) {
-  await fetch(`${API_URL}/users/sync`, {
+}) {
+  const res = await fetch(`${API_URL}/users/sync`, {
     method: "POST",
     headers: await authHeaders(),
     body: JSON.stringify(payload),
   });
-}
 
+  if (!res.ok) {
+    const text = await res.text();
+    throw new Error(text);
+  }
+
+  return res.json();
+}
 
 export async function savePushToken(uid: string, token: string) {
   await fetch(`${API_URL}/users/push-token`, {
