@@ -42,7 +42,8 @@ body {
   .header {
     display: flex;
     align-items: center;
-    gap: 5rem;
+    justify-content: space-between;
+    max-width: 50%;
     flex-wrap: wrap;
   }
   .txt-cont {
