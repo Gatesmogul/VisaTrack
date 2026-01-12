@@ -165,3 +165,25 @@ label {
   gap: 2rem;
   margin-top: 2rem;
 }
+
+
+.destop-img-signup{
+  display: none;
+}
+
+@media (min-width: 1024px){
+  .signup-body{
+    display: grid; 
+    grid-template-columns: 1fr 1fr;
+    padding: 0;
+  }
+  .destop-img-signup{
+    display: block;
+  }
+  .sign--form-main{
+    margin-top: 8rem;
+    padding: 5rem;
+    display: flex;
+    flex-direction: column;
+  }
+}
