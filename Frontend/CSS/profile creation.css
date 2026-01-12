@@ -1,0 +1,192 @@
+ *{
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+}
+
+body {
+  margin: 0;
+  background: #f4f6f8;
+  display: flex;
+  justify-content: center;
+}
+
+/* App container */
+.app {
+  width: 100%;
+  max-width: 420px;
+  min-height: 100vh;
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+  padding: 16px;
+}
+
+/* Header */
+.header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.back {
+  font-size: 22px;
+  cursor: pointer;
+}
+
+.title {
+  text-align: center;
+  flex: 1;
+}
+
+.title h2 {
+  margin: 0;
+  font-size: 18px;
+}
+
+.title p {
+  margin: 4px 0 0;
+  font-size: 13px;
+  color: #888;
+}
+
+/* Progress bar */
+.progress {
+  display: flex;
+  gap: 8px;
+  margin: 12px 0;
+}
+
+.progress span {
+  flex: 1;
+  height: 4px;
+  background: #ddd;
+  border-radius: 4px;
+}
+
+.progress .active {
+  background: #4a90e2;
+}
+
+/* Content */
+.content {
+  flex: 1;
+  overflow-y: auto;
+}
+
+/* Info box */
+.info {
+  background: #e9f3ff;
+  border: 1px solid #c6defc;
+  padding: 14px;
+  border-radius: 10px;
+  margin-bottom: 16px;
+}
+
+.info p {
+  margin: 6px 0 0;
+  font-size: 14px;
+  color: #555;
+}
+
+/* Labels */
+label {
+  display: block;
+  margin-top: 14px;
+  font-weight: 600;
+}
+
+label span {
+  color: red;
+}
+
+/* Inputs */
+.input-box {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border: 1px solid #ddd;
+  padding: 12px;
+  border-radius: 10px;
+  background: #fafafa;
+  margin-top: 6px;
+}
+
+.input-box input,
+.input-box select {
+  width: 100%;
+  border: none;
+  outline: none;
+  background: transparent;
+  font-size: 15px;
+}
+
+small {
+  font-size: 12px;
+  color: #999;
+}
+
+/* Gender */
+.gender {
+  display: flex;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.gender button {
+  flex: 1;
+  padding: 12px;
+  border-radius: 10px;
+  border: 1px solid #ddd;
+  background: #fff;
+  cursor: pointer;
+}
+
+.gender .active {
+  border-color: #4a90e2;
+  background: #e9f3ff;
+  color: #4a90e2;
+}
+
+/* Footer */
+.footer {
+  padding-top: 16px;
+}
+
+.next-btn {
+  width: 100%;
+  padding: 14px;
+  background: #f5f7fa;
+  color: black;
+  border: none;
+  border-radius: 12px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.next-btn:hover{
+    background-color: #4a90e2;
+
+}
+
+.male:hover{
+background-color: #4a90e2;
+color: white;
+}
+
+.female:hover{
+    background-color: #4a90e2;
+    color: white;
+}
+
+.other:hover{
+    background-color: #4a90e2;
+    color: white;
+}
+
+/* Desktop */
+@media (min-width: 768px) {
+  body {
+    align-items: center;
+    min-height: 100vh;
+  }
+}
