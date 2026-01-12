@@ -7,31 +7,24 @@ const passportGroup = document.getElementById("passportGroup");
 const countryGroup = document.getElementById("countryGroup");
 const issueDateGroup = document.getElementById("issueDateGroup");
 const expiryDateGroup = document.getElementById("expiryDateGroup");
-/* update to relevant countries*/
-const countries = [
-  "Nigeria",
-  "United States",
-  "United Kingdom",
-  "Canada",
-  "India",
-  "Germany",
-  "France",
-  "Australia",
-  "South Africa",
-  "Italy",
-  "Spain",
-  "Netherlands",
-  "Brazil",
-  "Japan",
-  "China",
-];
 
-countries.forEach((c) => {
-  const option = document.createElement("option");
-  option.value = c;
-  option.textContent = c;
-  countrySelect.appendChild(option);
-});
+fetch("https://restcountries.com/v3.1/all?fields=name")
+  .then((res) => res.json())
+  .then((data) => {
+    const countries = data
+      .map((c) => c.name.common)
+      .sort((a, b) => a.localeCompare(b));
+
+    countries.forEach((country) => {
+      const option = document.createElement("option");
+      option.value = country;
+      option.textContent = country;
+      countrySelect.appendChild(option);
+    });
+  })
+  .catch((err) => {
+    console.error("Failed to load countries", err);
+  });
 
 function isSixMonthsValid(expiry) {
   const today = new Date();
