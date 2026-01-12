@@ -250,3 +250,65 @@ select {
   opacity: 0.45;
   cursor: not-allowed;
 }
+@media (min-width: 768px) {
+  body {
+    background: #f3f4f6;
+  }
+
+  .form-container {
+    max-width: 760px;
+    min-height: auto;
+    margin: 3rem auto;
+    padding: 2rem 2.5rem;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  }
+
+  .form-header {
+    margin-bottom: 1.5rem;
+  }
+
+  .progress-bar {
+    margin-bottom: 1rem;
+  }
+
+  .divider {
+    margin-bottom: 2rem;
+  }
+
+  .photo-upload {
+    gap: 1.25rem;
+  }
+
+  .photo-avatar {
+    width: 64px;
+    height: 64px;
+    font-size: 1.3rem;
+  }
+
+  .upload-btn {
+    height: 44px;
+    font-size: 0.85rem;
+  }
+
+  .input-wrapper {
+    padding: 0.75rem 0.9rem;
+  }
+
+  .input-wrapper input {
+    font-size: 0.9rem;
+  }
+
+  select {
+    font-size: 0.85rem;
+  }
+
+  .form-actions {
+    margin-top: 2rem;
+  }
+
+  .btn {
+    min-width: 140px;
+    font-size: 0.85rem;
+  }
+}
