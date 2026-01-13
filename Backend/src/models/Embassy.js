@@ -77,4 +77,4 @@ const embassySchema = new mongoose.Schema({
  *         address: 123 Embassy Row
  *         services: [VISA_APPLICATION]
  */
-export default mongoose.model('Embassy', embassySchema);
+module.exports = mongoose.model('Embassy', embassySchema);

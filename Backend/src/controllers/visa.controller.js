@@ -3,7 +3,7 @@ import SavedRequirement from "../models/SavedRequirement.js";
 import {
   getMatchingRequirement,
   getRequiredDocuments,
-} from "../services/visaRule.service.js";
+} from "../services/visa.service.js";
 
 
 export const lookupVisa = async (req, res) => {
@@ -43,13 +43,29 @@ export const lookupVisa = async (req, res) => {
 };
 
 export const getRecentLookups = async (req, res) => {
-  const lookups = await VisaLookup.find({ user: req.user._id })
+  const lookups = await VisaLookup.find({ user: req.user.dbUser._id })
     .sort({ createdAt: -1 })
     .limit(5)
     .populate("passportCountry destinationCountry visaRequirement");
 
-  res.json(lookups);
+  res.json(
+    lookups.map((l) => ({
+      id: l._id,
+      passportCountry: {
+        code: l.passportCountry.code,
+        name: l.passportCountry.name,
+      },
+      destinationCountry: {
+        code: l.destinationCountry.code,
+        name: l.destinationCountry.name,
+      },
+      travelPurpose: l.travelPurpose,
+      visaType: l.visaRequirement?.visaType ?? "UNKNOWN",
+      createdAt: l.createdAt,
+    }))
+  );
 };
+
 
 export const saveRequirement = async (req, res) => {
   const { visaRequirementId } = req.body;
@@ -60,4 +76,28 @@ export const saveRequirement = async (req, res) => {
   });
 
   res.json({ message: "Saved successfully" });
+};
+
+export const getSavedRequirements = async (req, res) => {
+  const saved = await SavedRequirement.find({ user: req.user._id })
+    .populate({
+      path: "visaRequirement",
+      populate: [
+        { path: "passportCountry" },
+        { path: "destinationCountry" },
+      ],
+    })
+    .sort({ createdAt: -1 });
+
+  res.json(saved);
+};
+
+// controllers/visa.controller.js
+export const removeSavedRequirement = async (req, res) => {
+  await SavedRequirement.deleteOne({
+    _id: req.params.id,
+    user: req.user._id,
+  });
+
+  res.json({ success: true });
 };

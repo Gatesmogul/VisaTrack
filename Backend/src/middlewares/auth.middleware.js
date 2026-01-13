@@ -1,25 +1,37 @@
 import admin from "../config/firebaseAdmin.js";
+import User from "../models/User.js";
 
 export const authMiddleware = async (req, res, next) => {
   try {
-    const authHeader = req.headers.authorization;
+    const header = req.headers.authorization;
 
-    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+    if (!header || !header.startsWith("Bearer ")) {
       return res.status(401).json({ message: "Unauthorized" });
     }
 
-    const token = authHeader.split(" ")[1];
+    const token = header.split(" ")[1];
+    const decoded = await admin.auth().verifyIdToken(token);
 
-    const decodedToken = await admin.auth().verifyIdToken(token);
+    let user = await User.findOne({ authUserId: decoded.uid });
+
+    if (!user) {
+      user = await User.create({
+        authUserId: decoded.uid,
+        email: decoded.email,
+        emailVerified: decoded.email_verified || false,
+      });
+    }
 
     req.user = {
-      uid: decodedToken.uid,
-      email: decodedToken.email,
+      uid: decoded.uid,
+      email: decoded.email,
+      _id: user._id,
+      dbUser: user,
     };
 
     next();
-  } catch (error) {
-    console.error("Auth error:", error.message);
-    return res.status(401).json({ message: "Invalid or expired token" });
+  } catch (err) {
+    console.error("Auth middleware error:", err.message);
+    res.status(401).json({ message: "Invalid or expired token" });
   }
 };

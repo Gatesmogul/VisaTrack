@@ -13,6 +13,8 @@ const tripDestinationSchema = new mongoose.Schema(
     },
     visaRequired: Boolean,
     visaType: String,
+    processingTimeMin: Number,
+processingTimeMax: Number,
     notes: String
   },
   { timestamps: true }
