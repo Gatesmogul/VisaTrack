@@ -1,5 +1,15 @@
 import mongoose from 'mongoose';
 
+
+const USER_STATUS = {
+  NEW: "NEW",                     // account created
+  EMAIL_VERIFIED: "EMAIL_VERIFIED",
+  TERMS_ACCEPTED: "TERMS_ACCEPTED",
+  PROFILE_INCOMPLETE: "PROFILE_INCOMPLETE",
+  PROFILE_COMPLETE: "PROFILE_COMPLETE",
+};
+
+
 const userSchema = new mongoose.Schema(
   {
     authUserId: { type: String, required: true, unique: true },
@@ -34,9 +44,18 @@ const userSchema = new mongoose.Schema(
     expoPushToken:{type:String, default: false,
 
     },
+    status: {
+  type: String,
+  enum: Object.values(USER_STATUS),
+  default: USER_STATUS.NEW,
+},
+
   
   },
   { timestamps: true }
 );
 
+
+
 export default mongoose.model('User', userSchema);
+export { USER_STATUS };

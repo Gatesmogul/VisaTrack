@@ -4,7 +4,7 @@ import User from "../models/User.js";
 import {
   getMatchingRequirement,
   requiresPreArrivalAction
-} from "../services/visaRule.service.js";
+} from "../services/visa.service.js";
 
 /**
  * Add destination to a trip
@@ -46,7 +46,9 @@ export const addDestinationToTrip = async (req, res) => {
       exitDate,
       travelPurpose,
       visaRequired,
-      visaType: visaRequirement?.visaType || null
+      visaType: visaRequirement?.visaType || null,
+      processingTimeMin: visaRequirement?.processingTimeMin || null,
+        processingTimeMax: visaRequirement?.processingTimeMax || null
     });
 
     res.status(201).json(destination);

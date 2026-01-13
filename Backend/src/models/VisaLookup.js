@@ -14,6 +14,11 @@ const visaLookupSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "VisaRequirement",
     },
+    visaType: {
+  type: String,
+  enum: ['VISA_FREE', 'E_VISA', 'VISA_ON_ARRIVAL', 'EMBASSY_VISA', 'TRANSIT_VISA'],
+},
+
   },
   { timestamps: true }
 );
