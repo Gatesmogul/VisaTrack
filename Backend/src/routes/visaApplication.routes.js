@@ -1,6 +1,7 @@
 import express from "express";
-import { getMyApplications, getTracking, startVisaApplication } from "../controllers/visaApplication.controller.js";
+import { getMyApplications, getTracking, startVisaApplication, updateStatus } from "../controllers/visaApplication.controller.js";
 import { authMiddleware } from "../middlewares/auth.middleware.js";
+
 
 const router = express.Router();
 
@@ -13,6 +14,15 @@ router.post(
   authMiddleware,
   startVisaApplication
 );
+
+
+
+router.post(
+  "/visa-applications/:id/status",
+  authMiddleware,
+  updateStatus
+);
+
 
 
 export default router;

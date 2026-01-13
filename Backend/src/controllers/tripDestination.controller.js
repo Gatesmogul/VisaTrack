@@ -5,7 +5,7 @@ import {
   getMatchingRequirement,
   requiresPreArrivalAction
 } from "../services/visa.service.js";
-
+import { checkDestinationFeasibility } from "../services/feasibility.service.js";
 /**
  * Add destination to a trip
  */
@@ -61,6 +61,10 @@ export const addDestinationToTrip = async (req, res) => {
 /**
  * Get all destinations for a trip
  */
+
+
+
+
 export const getTripDestinations = async (req, res) => {
   try {
     const { tripId } = req.params;
@@ -68,7 +72,29 @@ export const getTripDestinations = async (req, res) => {
     const destinations = await TripDestination.find({ tripId })
       .populate("countryId");
 
-    res.json(destinations);
+    const enriched = destinations.map((dest) => {
+      if (!dest.visaRequired) {
+        return {
+          ...dest.toObject(),
+          feasibility: {
+            status: "FEASIBLE",
+            reason: "Visa not required",
+          },
+        };
+      }
+
+      const feasibility = checkDestinationFeasibility({
+        entryDate: dest.entryDate,
+        processingTimeMax: dest.processingTimeMax,
+      });
+
+      return {
+        ...dest.toObject(),
+        feasibility,
+      };
+    });
+
+    res.json(enriched);
   } catch (error) {
     console.error("Get trip destinations error:", error);
     res.status(500).json({ message: "Failed to fetch destinations" });

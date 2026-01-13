@@ -3,40 +3,79 @@ import VisaRequirement from "../models/VisaRequirement.js";
 import { calculateVisaTimeline } from "./visaTimeline.service.js";
 import { checkDocumentCompleteness } from "./document.service.js";
 import { sendNotification } from "./notification.service.js";
+import { VISA_STATUS_FLOW } from "../jobs/visaStatusFlow.js";
 
-const updateApplicationStatus = async (applicationId, newStatus, updates = {}) => {
+const updateApplicationStatus = async (
+  applicationId,
+  newStatus,
+  updates = {}
+) => {
   const application = await VisaApplication.findById(applicationId)
-    .populate("visaRequirementId")
-    .populate("tripDestinationId");
+    .populate("tripDestinationId")
+    .populate("visaRequirementId");
 
   if (!application) throw new Error("Application not found");
 
-  const oldStatus = application.status;
+  const currentStatus = application.status;
+
+  const allowedNext =
+    VISA_STATUS_FLOW[currentStatus] || [];
+
+  if (!allowedNext.includes(newStatus)) {
+    throw new Error(
+      `Invalid status transition: ${currentStatus} → ${newStatus}`
+    );
+  }
+
+  // ⛔ Appointment date required
+  if (
+    newStatus === "APPOINTMENT_BOOKED" &&
+    !updates.appointmentDate
+  ) {
+    throw new Error("appointmentDate is required");
+  }
+  if (
+  newStatus === "UNDER_REVIEW" &&
+  application.expectedDecisionDate
+) {
+  const today =
+    new Date().toDateString() ===
+    new Date(application.expectedDecisionDate).toDateString();
+
+  if (today) {
+    await sendNotification(application, "DECISION_EXPECTED");
+  }
+}
+
+
+  // ⛔ Submission date required
+  if (
+    newStatus === "SUBMITTED" &&
+    !updates.submissionDate
+  ) {
+    throw new Error("submissionDate is required");
+  }
+
   application.status = newStatus;
 
-  if (updates.appointmentDate) application.appointmentDate = updates.appointmentDate;
-  if (updates.submissionDate) application.submissionDate = updates.submissionDate;
-  if (updates.decisionDate) application.decisionDate = updates.decisionDate;
-  if (updates.notes) application.notes = updates.notes;
+  if (updates.appointmentDate)
+    application.appointmentDate = updates.appointmentDate;
 
-  if (updates.submissionDate && application.visaRequirementId) {
-    const timeline = calculateTimeline(
-      application.visaRequirementId,
-      application.tripDestinationId.entryDate,
-      updates.submissionDate
-    );
+  if (updates.submissionDate)
+    application.submissionDate = updates.submissionDate;
 
-    application.expectedDecisionDate = timeline.expectedDecisionDate;
-  }
+  if (updates.decisionDate)
+    application.decisionDate = updates.decisionDate;
 
   await application.save();
 
-  if (oldStatus !== newStatus) {
-    await sendNotification(application, "STATUS_UPDATE");
-  }
+  // 🔔 Notify only after successful transition
+  await sendNotification(application, "STATUS_UPDATE");
 
   return application;
 };
+
+
 
 const getTrackingDetails = async (applicationId) => {
   const application = await VisaApplication.findById(applicationId)
@@ -83,7 +122,10 @@ const calculateProgress = (status, completeness) => {
 };
 
 
+
+
 export {
   updateApplicationStatus,
-  getTrackingDetails
+  getTrackingDetails,
+ 
 };
