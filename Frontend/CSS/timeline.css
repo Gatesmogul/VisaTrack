@@ -4,7 +4,6 @@
 }
 
 body {
-  background: #f5f7fa;
   margin: 0;
   padding: 20px;
   min-height: 100vh;
@@ -16,6 +15,7 @@ body {
   margin: 0 auto;
   background: #fff;
   padding: 20px;
+  border: 1px solid #ddd;
   border-radius: 12px;
   display: flex;
   flex-direction: column;
