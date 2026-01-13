@@ -11,13 +11,14 @@ body {
 }
 
 .app-container {
-  max-width: 420px;
+  width: 100%;
+  min-width: unset;
+  min-height: 100vh;
   margin: auto;
   padding: 1rem;
   padding-bottom: 5.5rem;
 }
 
-/* HEADER */
 .page-header {
   position: relative;
   display: flex;
@@ -40,7 +41,6 @@ body {
   cursor: pointer;
 }
 
-/* FORM */
 .lookup-form {
   display: flex;
   flex-direction: column;
@@ -61,13 +61,12 @@ body {
   border: 1px solid #d1d5db;
 }
 
-/* BOTTOM NAV */
 .bottom-nav {
   position: fixed;
   bottom: 0;
   left: 50%;
   transform: translateX(-50%);
-  max-width: 420px;
+  min-width: unset;
   width: 100%;
   background: #ffffff;
   border-top: 1px solid #e5e7eb;
@@ -110,4 +109,67 @@ body {
   align-items: center;
   justify-content: center;
   margin-bottom: 2px;
+}
+@media (min-width: 768px) {
+  body {
+    background: #f3f4f6;
+  }
+
+  .app-container {
+    padding: 2rem 2.25rem;
+    background: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+    padding-bottom: 2rem;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .page-header h1 {
+    font-size: 1.5rem;
+  }
+
+  .form-group label {
+    font-size: 0.85rem;
+  }
+
+  .select-input {
+    font-size: 0.85rem;
+    padding: 0.85rem;
+  }
+
+  .bottom-nav {
+    position: static;
+    transform: none;
+    max-width: none;
+    border-top: none;
+    background: transparent;
+    justify-content: space-between;
+    padding: 0;
+    margin-top: auto;
+  }
+
+  .nav-item {
+    flex-direction: row;
+    gap: 0.5rem;
+    font-size: 0.8rem;
+  }
+
+  .nav-item span {
+    font-size: 1.1rem;
+  }
+
+  .nav-center {
+    margin-top: 0;
+  }
+
+  .center-icon {
+    width: auto;
+    height: auto;
+    background: none;
+    color: inherit;
+    border-radius: 0;
+    font-size: 1.1rem;
+    margin-bottom: 0;
+  }
 }

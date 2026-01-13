@@ -11,7 +11,8 @@ body {
 }
 
 .settings-container {
-  max-width: 420px;
+  width: 100%;
+  min-width: unset;
   margin: auto;
   padding: 1rem;
   padding-bottom: 2rem;
@@ -31,8 +32,8 @@ body {
 }
 
 .app-icon {
-  width: 28px;
-  height: 28px;
+  width: 48px;
+  height: 48px;
 }
 
 .profile-card {
@@ -163,10 +164,8 @@ body {
   }
 
   .settings-container {
-    max-width: 960px;
     background: #ffffff;
     border-radius: 16px;
-    margin: 2.5rem auto;
     padding: 2rem 2.5rem;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
   }
@@ -176,7 +175,8 @@ body {
   }
 
   .settings-header h1 {
-    font-size: 1.1rem;
+    font-size: 2rem;
+    font-weight: 400;
   }
 
   .profile-card {
