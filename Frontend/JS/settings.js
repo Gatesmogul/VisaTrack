@@ -12,6 +12,10 @@ document.querySelectorAll(".nav-item").forEach((item) => {
 
     const page = item.dataset.page;
     console.log("Navigate to:", page);
+    if (page === "home") window.location.href = "";
+    if (page === "trip") window.location.href = "";
+    if (page === "track") window.location.href = "";
+    if (page === "settings") window.location.href = "";
   });
 });
 

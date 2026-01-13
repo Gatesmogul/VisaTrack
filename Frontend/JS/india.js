@@ -76,5 +76,14 @@ navItems.forEach((item) => {
   item.addEventListener("click", () => {
     navItems.forEach((nav) => nav.classList.remove("active"));
     item.classList.add("active");
+
+    const page = item.dataset.page;
+    console.log("Navigate to:", page);
+
+    if (page === "home") window.location.href = "";
+    if (page === "timeline") window.location.href = "";
+    if (page === "new") window.location.href = "";
+    if (page === "tracker") window.location.href = "";
+    if (page === "profile") window.location.href = "";
   });
 });

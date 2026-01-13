@@ -4,6 +4,8 @@ const backBtn = document.getElementById("backBtn");
 const navItems = document.querySelectorAll(".nav-item");
 
 backBtn.addEventListener("click", () => {
+  window.location.href = "";
+
   history.back();
 });
 
@@ -15,6 +17,12 @@ navItems.forEach((item) => {
     item.classList.add("active");
 
     console.log(`Navigate to: ${page}`);
+
+    if (page === "home") window.location.href = "";
+    if (page === "explore") window.location.href = "";
+    if (page === "new") window.location.href = "";
+    if (page === "tracker") window.location.href = "";
+    if (page === "profile") window.location.href = "";
   });
 });
 

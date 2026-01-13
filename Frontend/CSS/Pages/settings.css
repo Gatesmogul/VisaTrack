@@ -14,7 +14,7 @@ body {
   max-width: 420px;
   margin: auto;
   padding: 1rem;
-  padding-bottom: 5rem;
+  padding-bottom: 2rem;
 }
 
 .settings-header {
@@ -35,7 +35,6 @@ body {
   height: 28px;
 }
 
-/* PROFILE CARD */
 .profile-card {
   background: #f9fafb;
   border-radius: 14px;
@@ -125,10 +124,13 @@ body {
   bottom: 0;
   left: 50%;
   transform: translateX(-50%);
+
   max-width: 420px;
   width: 100%;
-  background: #fff;
+
+  background: #ffffff;
   border-top: 1px solid #e5e7eb;
+
   display: flex;
   justify-content: space-around;
   padding: 0.4rem 0;
@@ -153,4 +155,81 @@ body {
 
 .nav-item.active {
   color: #2563eb;
+}
+
+@media (min-width: 1024px) {
+  body {
+    background: #f5f7fa;
+  }
+
+  .settings-container {
+    max-width: 960px;
+    background: #ffffff;
+    border-radius: 16px;
+    margin: 2.5rem auto;
+    padding: 2rem 2.5rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
+  }
+
+  .settings-header {
+    margin-bottom: 2rem;
+  }
+
+  .settings-header h1 {
+    font-size: 1.1rem;
+  }
+
+  .profile-card {
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+  }
+
+  .profile-info {
+    gap: 1rem;
+  }
+
+  .profile-text h2 {
+    font-size: 1rem;
+  }
+
+  .edit-profile-btn {
+    max-width: 220px;
+    margin-top: 0.75rem;
+  }
+
+  .settings-section {
+    margin-bottom: 2rem;
+  }
+
+  .settings-section h3 {
+    font-size: 0.85rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .row {
+    padding: 1rem 1.1rem;
+    font-size: 0.85rem;
+  }
+
+  .notifications-list {
+    padding: 0.25rem 0;
+  }
+
+  .bottom-nav {
+    position: relative;
+
+    left: auto;
+    transform: none;
+
+    min-width: 100%;
+    width: 100%;
+
+    margin: 2.5rem auto 0;
+
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 14px;
+
+    padding: 0.75rem 0;
+  }
 }

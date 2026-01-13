@@ -8,6 +8,22 @@ const countryGroup = document.getElementById("countryGroup");
 const issueDateGroup = document.getElementById("issueDateGroup");
 const expiryDateGroup = document.getElementById("expiryDateGroup");
 
+const backBtn = document.querySelector(".back-btn");
+if (backBtn) {
+  backBtn.addEventListener("click", () => {
+    window.location.href = "";
+
+    history.back();
+  });
+}
+
+const prevBtn = document.querySelector(".btn.secondary");
+if (prevBtn) {
+  prevBtn.addEventListener("click", () => {
+    window.location.href = "";
+  });
+}
+
 fetch("https://restcountries.com/v3.1/all?fields=name")
   .then((res) => res.json())
   .then((data) => {
@@ -60,4 +76,6 @@ document.getElementById("passportForm").addEventListener("submit", (e) => {
   if (error) return;
 
   console.log("Passport details valid — ready for backend");
+
+  window.location.href = "";
 });

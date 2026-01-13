@@ -1,6 +1,23 @@
 document.addEventListener("DOMContentLoaded", () => {
   const countrySelect = document.getElementById("countryCode");
   if (!countrySelect) return;
+
+  const backBtn = document.querySelector(".back-btn");
+  if (backBtn) {
+    backBtn.addEventListener("click", () => {
+      window.location.href = "";
+
+      history.back();
+    });
+  }
+
+  const prevBtn = document.querySelector(".btn.secondary");
+  if (prevBtn) {
+    prevBtn.addEventListener("click", () => {
+      window.location.href = "";
+    });
+  }
+
   fetch("https://restcountries.com/v3.1/all?fields=name,cca2,idd")
     .then((res) => {
       if (!res.ok) throw new Error("Network error");
@@ -127,5 +144,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (hasError) return;
 
     console.log("Form valid — proceed to next step");
+
+    window.location.href = "";
   });
 });

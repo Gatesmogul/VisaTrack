@@ -3,6 +3,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const logoutBtn = document.querySelector(".btn.logout");
 
   cancelBtn.addEventListener("click", () => {
+    window.location.href = "";
+
     history.back();
   });
 
