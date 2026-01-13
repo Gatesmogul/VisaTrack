@@ -1,5 +1,5 @@
 document.getElementById("editProfileBtn").addEventListener("click", () => {
-  window.location.href = "profile.html";
+  window.location.href = "";
 });
 
 document.querySelectorAll(".nav-item").forEach((item) => {
