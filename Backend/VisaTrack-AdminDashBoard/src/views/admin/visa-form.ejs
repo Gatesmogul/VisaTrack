@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><%= visa ? 'Edit' : 'Add' %> Visa - VisaTrack Admin</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        padding: 20px;
+      }
+      .container {
+        max-width: 600px;
+        margin: 0 auto;
+      }
+      nav {
+        background: #667eea;
+        backdrop-filter: blur(10px);
+        padding: 1rem;
+        margin-bottom: 2rem;
+        border-radius: 10px;
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+      }
+      nav ul {
+        list-style: none;
+        display: flex;
+        gap: 2rem;
+        flex-wrap: wrap;
+      }
+      nav a {
+        color: rgb(7, 7, 7);
+        text-decoration: none;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      nav a i {
+        font-size: 1.1em;
+      }
+      .card {
+        background: white;
+        border-radius: 10px;
+        padding: 30px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+      }
+      h1 {
+        margin-bottom: 30px;
+        color: #333;
+      }
+      .error-message {
+        background: #f8d7da;
+        border: 1px solid #f5c6cb;
+        color: #721c24;
+        padding: 15px;
+        border-radius: 5px;
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .error-message i {
+        font-size: 1.3em;
+      }
+      .form-group {
+        margin-bottom: 20px;
+      }
+      label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 600;
+        color: #333;
+      }
+      input,
+      textarea {
+        width: 100%;
+        padding: 12px;
+        border: 2px solid #e0e0e0;
+        border-radius: 5px;
+        font-size: 14px;
+        font-family: inherit;
+        transition: border-color 0.3s;
+      }
+      input:focus,
+      textarea:focus {
+        outline: none;
+        border-color: #667eea;
+      }
+      textarea {
+        resize: vertical;
+        min-height: 100px;
+      }
+      .button-group {
+        display: flex;
+        gap: 10px;
+        margin-top: 30px;
+      }
+      button,
+      a {
+        padding: 12px 24px;
+        border-radius: 5px;
+        text-decoration: none;
+        cursor: pointer;
+        font-weight: 600;
+        border: none;
+        transition: all 0.3s;
+      }
+      button {
+        background: #667eea;
+        color: white;
+      }
+      button:hover {
+        background: #5568d3;
+      }
+      a {
+        background: #e0e0e0;
+        color: #333;
+      }
+      a:hover {
+        background: #d0d0d0;
+      }
+      .error {
+        color: #ff6b6b;
+        font-size: 12px;
+        margin-top: 5px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <nav>
+        <ul>
+          <li>
+            <a href="/admin/dashboard"
+              ><i class="fas fa-chart-line"></i> Dashboard</a
+            >
+          </li>
+          <li>
+            <a href="/admin/visas"><i class="fas fa-list"></i> Manage Visas</a>
+          </li>
+          <li>
+            <a href="/logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
+          </li>
+        </ul>
+      </nav>
+
+      <div class="card">
+        <h1><%= visa ? 'Edit Visa Requirement' : 'Add Visa Requirement' %></h1>
+
+        <% if (error) { %>
+        <div class="error-message">
+          <i class="fas fa-exclamation-circle"></i>
+          <div><strong>Error:</strong> <%= error %></div>
+        </div>
+        <% } %>
+        <form
+          action="<%= visa ? '/admin/visas/' + visa._id + '?_method=PUT' : '/admin/visas' %>"
+          method="POST"
+        >
+          <div class="form-group">
+            <label for="country">Country:</label>
+            <input
+              type="text"
+              id="country"
+              name="country"
+              value="<%= visa ? visa.country : '' %>"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="visaType">Visa Type:</label>
+            <input
+              type="text"
+              id="visaType"
+              name="visaType"
+              value="<%= visa ? visa.visaType : '' %>"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="requirements">Requirements (comma-separated):</label>
+            <textarea id="requirements" name="requirements" required>
+<%= visa ? (Array.isArray(visa.requirements) ? visa.requirements.join(', ') : visa.requirements) : '' %></textarea
+            >
+          </div>
+          <div class="form-group">
+            <label for="processingTime">Processing Time:</label>
+            <input
+              type="text"
+              id="processingTime"
+              name="processingTime"
+              value="<%= visa ? visa.processingTime : '' %>"
+              placeholder="e.g., 5-10 business days"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="fees">Fees (USD):</label>
+            <input
+              type="number"
+              id="fees"
+              name="fees"
+              step="0.01"
+              value="<%= visa ? visa.fees : '' %>"
+              required
+            />
+          </div>
+          <div class="button-group">
+            <button type="submit">
+              <%= visa ? 'Update Visa Requirement' : 'Add Visa Requirement' %>
+            </button>
+            <a href="/admin/visas">Cancel</a>
+          </div>
+        </form>
+      </div>
+    </div>
+  </body>
+</html>

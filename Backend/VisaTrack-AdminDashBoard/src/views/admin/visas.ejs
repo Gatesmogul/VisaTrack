@@ -1,0 +1,282 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Visa Requirements - VisaTrack Admin</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        font-family: Segoe UI, Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        padding: 20px;
+      }
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+      nav {
+        background: #667eea;
+        backdrop-filter: blur(10px);
+        padding: 1rem;
+        margin-bottom: 2rem;
+        border-radius: 10px;
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+        height: 4.7rem;
+        display: flex;
+        align-items: center;
+      }
+      nav ul {
+        list-style: none;
+        display: flex;
+        gap: 1.25rem;
+        flex-wrap: wrap;
+        align-items: center;
+      }
+      nav a {
+        color: #fff;
+        text-decoration: none;
+        display: flex;
+        gap: 8px;
+        align-items: center;
+        font-weight: 500;
+        padding: 8px 12px;
+        border-radius: 6px;
+        transition: background 0.2s ease, transform 0.2s ease;
+
+
+
+      }
+      nav a:hover {
+        background: rgba(255, 255, 255, 0.2);
+        transform: translateY(-2px);
+      }
+      .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 30px;
+      }
+      h1 {
+        color: #fff;
+        font-size: 2.25rem;
+      }
+      .card {
+        background: #fff;
+        border-radius: 10px;
+        padding: 24px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+        margin-bottom: 24px;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      th,
+      td {
+        padding: 12px;
+        text-align: left;
+        border-bottom: 1px solid #eee;
+      }
+      .btn {
+        padding: 8px 12px;
+        border-radius: 6px;
+        text-decoration: none;
+        color: #fff;
+        display: inline-block;
+        border: none;
+        cursor: pointer;
+      }
+      .btn-primary {
+        background: #667eea;
+      }
+      .btn-danger {
+        background: #ff6b6b;
+      }
+      .btn-success {
+        background: #51cf66;
+      }
+      .no-data {
+        text-align: center;
+        padding: 40px;
+        color: #777;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <nav>
+        <ul>
+          <li>
+            <a href="/admin/dashboard"
+              ><i class="fas fa-chart-line"></i> Dashboard</a
+            >
+          </li>
+          <li>
+            <a href="/admin/visas"><i class="fas fa-list"></i> Manage Visas</a>
+          </li>
+          <li>
+            <a href="/admin/visas/new"
+              ><i class="fas fa-plus-circle"></i> Add Visa</a
+            >
+          </li>
+          <li>
+            <a href="/logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
+          </li>
+        </ul>
+      </nav>
+
+      <div class="header">
+        <h1>Visa Requirements</h1>
+        <div class="admin-info">
+          Welcome, <strong><%= adminName || 'Admin' %></strong>
+        </div>
+      </div>
+
+      <% if (typeof success !== 'undefined' && success) { %>
+      <div
+        class="card"
+        style="
+          background: #d4edda;
+          border: 1px solid #c3e6cb;
+          color: #155724;
+          display: flex;
+          gap: 10px;
+          align-items: center;
+        "
+      >
+        <span style="font-size: 18px"></span>
+        <div><strong>Success!</strong> <%= success %></div>
+      </div>
+      <% } %> <% if (typeof error !== 'undefined' && error) { %>
+      <div
+        class="card"
+        style="
+          background: #f8d7da;
+          border: 1px solid #f5c6cb;
+          color: #721c24;
+          display: flex;
+          gap: 10px;
+          align-items: center;
+        "
+      >
+        <span style="font-size: 18px"></span>
+        <div><strong>Error:</strong> <%= error %></div>
+      </div>
+      <% } %> <% if (typeof uploadErrors !== 'undefined' &&
+      Array.isArray(uploadErrors) && uploadErrors.length > 0) { %>
+      <div
+        class="card"
+        style="background: #fff3cd; border: 1px solid #ffeeba; color: #856404"
+      >
+        <strong>Upload Warnings:</strong>
+        <ul style="margin-top: 8px; padding-left: 1.25rem">
+          <% uploadErrors.forEach(function(err){ %>
+          <li><%= err %></li>
+          <% }) %>
+        </ul>
+      </div>
+      <% } %>
+
+      <div class="card">
+        <h2 style="margin-bottom: 12px">
+          <i class="fas fa-file-csv"></i> Upload Visa Data
+        </h2>
+        <form
+          action="/admin/visas/upload"
+          method="POST"
+          enctype="multipart/form-data"
+        >
+          <input type="file" name="file" accept=".csv" required />
+          <button
+            type="submit"
+            class="btn btn-success"
+            style="margin-left: 8px"
+          >
+            Upload CSV
+          </button>
+        </form>
+        <p style="margin-top: 10px; font-size: 12px; color: #666">
+          CSV columns: country,visaType,requirements(semi-colon
+          separated),processingTime,fees
+        </p>
+      </div>
+
+      <div class="card">
+        <div style="margin-bottom: 12px">
+          <a href="/admin/visas/new" class="btn btn-primary"
+            >+ Add New Visa Requirement</a
+          >
+        </div>
+
+        <% if (typeof visas !== 'undefined' && Array.isArray(visas) &&
+        visas.length > 0) { %>
+        <table>
+          <thead>
+            <tr>
+              <th>Country</th>
+              <th>Visa Type</th>
+              <th>Requirements</th>
+              <th>Processing Time</th>
+              <th>Fees</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% visas.forEach(function(visa){ %>
+            <tr>
+              <td><%= visa.country %></td>
+              <td><%= visa.visaType || visa.type %></td>
+              <td>
+                  <%= Array.isArray(visa.requirements)
+                  ? visa.requirements.join(', ')
+                  : (visa.requirements || '') %>
+              </td>
+
+
+              <td><%= visa.processingTime %></td>
+              <td>$<%= visa.fees %></td>
+              <td>
+                <a
+                  href="/admin/visas/<%= visa._id %>/edit"
+                  class="btn btn-primary"
+                  >Edit</a
+                >
+                <form
+                  action="/admin/visas/<%= visa._id %>?_method=DELETE"
+                  method="POST"
+                  style="display: inline; margin-left: 8px"
+                  onsubmit="return confirm('Delete this visa requirement?');"
+                >
+                  <button type="submit" class="btn btn-danger">Delete</button>
+                </form>
+              </td>
+            </tr>
+            <% }) %>
+          </tbody>
+        </table>
+        <% } else { %>
+        <div class="no-data">
+          No visa requirements found.
+          <a href="/admin/visas/new" style="color: #667eea">Add one now</a>
+        </div>
+        <% } %>
+      </div>
+
+      <footer style="margin-top: 24px; color: #fff; text-align: center">
+        &copy; <%= new Date().getFullYear() %> VisaTrack Admin Panel
+      </footer>
+    </div>
+  </body>
+</html>

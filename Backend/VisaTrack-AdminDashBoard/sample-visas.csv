@@ -1,0 +1,8 @@
+country,visaType,requirements,processingTime,fees
+Canada,Tourist Visa,Passport;Birth Certificate;Police Clearance;Medical Exam,15 days,150
+United States,Work Visa,Passport;Birth Certificate;Police Clearance;Medical Exam;Job Offer Letter,30 days,190
+United Kingdom,Student Visa,Passport;Birth Certificate;Police Clearance;Medical Exam;Acceptance Letter;Financial Proof,14 days,348
+Australia,Skilled Migration,Passport;Birth Certificate;Police Clearance;Medical Exam;Skills Assessment;Employment Verification,20 days,310
+Germany,Schengen Visa,Passport;Birth Certificate;Police Clearance;Medical Exam;Travel Insurance;Flight Booking,10 days,80
+France,Business Visa,Passport;Birth Certificate;Police Clearance;Medical Exam;Business Invitation;Financial Proof,7 days,99
+Japan,Work Visa,Passport;Birth Certificate;Police Clearance;Medical Exam;Employment Contract;Graduation Certificate,30 days,220

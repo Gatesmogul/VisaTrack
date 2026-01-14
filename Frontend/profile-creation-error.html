@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="CSS/profile-creation-error.css">
+</head>
+<body>
+     <div class="container">
+
+     <!-- Header -->
+    <header class="header">
+      <span class="back">&#8592;</span>
+      <div class="title">
+        <h2>Personal Information</h2>
+        <p>Step 1 of 3</p>
+      </div>
+    </header>
+
+    <!-- Progress -->
+    <div class="progress">
+      <span class="active"></span>
+      <span></span>
+      <span></span>
+    </div>
+
+    <!-- Error Box -->
+    <div class="error-box">
+      <strong>Please fix the errors below</strong>
+      <p>Some required fields are missing or incorrect.</p>
+    </div>
+
+    <!-- Full Name -->
+    <label>Full Name <span>*</span></label>
+    <div class="input error">
+      <input type="text" placeholder="Enter your full name" />
+    </div>
+    <small class="error-text">This field is required</small>
+
+    <!-- Date of Birth -->
+    <label>Date of Birth <span>*</span></label>
+    <div class="input success">
+      <input type="date" value="1987-06-14" />
+    </div>
+
+    <!-- Gender -->
+    <label>Gender</label>
+      <div class="gender">
+        <button class="male">♂ Male</button>
+        <button class="female">♀ Female</button>
+        <button class="other">Other</button>
+      </div>
+    
+
+    <!-- Nationality -->
+    <label>Nationality <span>*</span></label>
+    <div class="input error">
+      <select>
+        <option value="">Select your nationality</option>
+        <option>Nigerian</option>
+        <option>American</option>
+        <option>British</option>
+         <option>south Africa</option>
+          <option>Canada</option>
+          <option>india</option>
+          <option>Japan</option>
+          <option>Brazil</option>
+          <option>Australia</option>
+          <option>France</option>
+          <option>Germany</option>
+          <option>indonesia</option>
+          <option>new zealand</option>
+          <option>argentina</option>
+          <option>spain</option>
+          <option>mexico</option>
+          <option>italy</option>
+          <option>russia</option>
+          <option>iraq</option>
+          <option>isreal</option>
+          <option>cambodia</option>
+          <option>brunei</option>
+          <option>Bukgaria</option>
+          <option>Burkinafaso</option>
+          <option>Bostwana</option>
+          <option>egypt</option>
+          <option>Greece</option>
+          <option>Hungary</option>
+          <option>Holy sea</option>
+          <option>Japan</option>
+          <option>jordan</option>
+            <option>kenya</option>
+            <option>kuwait</option>
+            <option>laos</option>
+            <option>lebanon</option>
+            <option>libya</option>
+            <option>malaysia</option>
+            <option>maldives</option>
+            <option>mongolia</option>
+            <option>morocco</option>
+            <option>nepal</option>
+            <option>oman</option>
+            <option>pakistan</option>
+            <option>peru</option>
+            <option>philippines</option>
+            <option>qatar</option>
+            <option>serbia</option>
+            <option>sri lanka</option>
+            <option>sweden</option>
+            <option>switzerland</option>
+            <option>taiwan</option>
+            <option>thailand</option>   
+            <option>turkey</option>
+            <option>uae</option>
+            <option>vietnam</option>
+      </select>
+    </div>
+    <small class="error-text">Please select your nationality</small>
+
+    <!-- Country -->
+    <label>Country of Residence <span>*</span></label>
+    <div class="input success">
+      <input type="text" value="Country" />
+    </div>
+
+ <!-- Button -->
+    <footer class="footer">
+      <button class="next-btn">Next</button>
+    </footer>
+
+  </div>
+</body>
+</html>

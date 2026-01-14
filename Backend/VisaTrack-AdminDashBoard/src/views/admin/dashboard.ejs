@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Dashboard - VisaTrack</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        padding: 20px;
+      }
+      .navbar {
+        background: #667eea;
+        backdrop-filter: blur(10px);
+        padding: 1.2rem 2rem;
+        border-radius: 10px;
+        margin-bottom: 30px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        
+        position: sticky;
+        top :0px;
+        z-index: 1000;
+      }
+      .navbar ul {
+        list-style: none;
+        display: flex;
+        gap: 2.5rem;
+        flex-wrap: wrap;
+      }
+      .navbar a {
+        color: white;
+        text-decoration: none;
+        font-weight: 500;
+        transition: all 0.3s;
+        padding: 8px 12px;
+        border-radius: 5px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .navbar a i {
+        font-size: 1.1em;
+      }
+      .navbar a:hover {
+        background: rgba(255, 255, 255, 0.2);
+        transform: translateY(-2px);
+      }
+      .admin-badge {
+        background: rgba(255, 255, 255, 0.2);
+        color: white;
+        padding: 10px 18px;
+        border-radius: 20px;
+        font-size: 14px;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .admin-badge i {
+        font-size: 1.3em;
+      }
+      .container {
+        max-width: 1400px;
+        margin: 0 auto;
+      }
+      .header {
+        color: white;
+        margin-bottom: 40px;
+      }
+      .header h1 {
+        font-size: 3rem;
+        margin-bottom: 8px;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+      }
+      .header p {
+        font-size: 1.1rem;
+        opacity: 0.9;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+        gap: 25px;
+        margin-bottom: 30px;
+      }
+      .card {
+        background: white;
+        border-radius: 12px;
+        padding: 30px;
+        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+        transition: all 0.3s;
+      }
+      .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 16px 50px rgba(0, 0, 0, 0.2);
+      }
+      .card h2 {
+        color: #333;
+        margin-bottom: 12px;
+        font-size: 1.3rem;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .card p {
+        color: #666;
+        line-height: 1.6;
+        margin-bottom: 20px;
+      }
+      .btn {
+        display: inline-block;
+        padding: 12px 28px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        text-decoration: none;
+        border-radius: 8px;
+        font-weight: 600;
+        transition: all 0.3s;
+        border: none;
+        cursor: pointer;
+        font-size: 15px;
+      }
+      .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+      }
+      .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 15px;
+        margin-top: 20px;
+      }
+      .stat-box {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 25px;
+        border-radius: 10px;
+        text-align: center;
+        box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+      }
+      .stat-number {
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: 8px;
+      }
+      .stat-label {
+        font-size: 14px;
+        opacity: 0.9;
+      }
+      .upload-section {
+        background: white;
+        border-radius: 12px;
+        padding: 30px;
+        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+        margin-bottom: 30px;
+      }
+      .upload-section h2 {
+        margin-bottom: 20px;
+        color: #333;
+      }
+      .upload-tabs {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 20px;
+      }
+      .tab-btn {
+        padding: 10px 20px;
+        border: 2px solid #ddd;
+        background: white;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: 600;
+        transition: all 0.3s;
+        color: #666;
+      }
+      .tab-btn.active {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border-color: #667eea;
+      }
+      .tab-content {
+        display: none;
+      }
+      .tab-content.active {
+        display: block;
+      }
+      .upload-form {
+        display: flex;
+        gap: 10px;
+        align-items: flex-end;
+      }
+      .form-group {
+        flex: 1;
+      }
+      .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 600;
+        color: #333;
+      }
+      input[type="file"] {
+        width: 100%;
+        padding: 12px;
+        border: 2px solid #e0e0e0;
+        border-radius: 8px;
+        font-family: inherit;
+      }
+      input[type="file"]:focus {
+        outline: none;
+        border-color: #667eea;
+      }
+      .upload-info {
+        background: #f0f4ff;
+        padding: 15px;
+        border-radius: 8px;
+        border-left: 4px solid #667eea;
+        margin-bottom: 15px;
+        font-size: 14px;
+        color: #333;
+      }
+      .upload-info code {
+        background: #e8ecff;
+        padding: 2px 6px;
+        border-radius: 3px;
+        font-family: monospace;
+      }
+      footer {
+        background: rgba(0, 0, 0, 0.15);
+        color: white;
+        text-align: center;
+        padding: 25px;
+        border-radius: 10px;
+        margin-top: 40px;
+        font-size: 14px;
+      }
+      footer a {
+        color: white;
+        text-decoration: none;
+      }
+      footer a:hover {
+        text-decoration: underline;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="navbar">
+      <ul>
+        <li>
+          <a href="/admin/dashboard"
+            ><i class="fas fa-chart-line"></i> Dashboard</a
+          >
+        </li>
+        <li>
+          <a href="/admin/visas"><i class="fas fa-list"></i> Manage Visas</a>
+        </li>
+        <li>
+          <a href="/admin/visas/new"
+            ><i class="fas fa-plus-circle"></i> Add Visa</a
+          >
+        </li>
+        <li>
+          <a href="/logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
+        </li>
+      </ul>
+      <div class="admin-badge">
+        <i class="fas fa-user-circle"></i> <%= adminName || 'Admin' %>
+      </div>
+    </div>
+
+    <div class="container">
+      <div class="header">
+        <h1>Dashboard</h1>
+        <p>
+          Welcome to VisaTrack Admin Panel - Manage your visa requirements
+          efficiently
+        </p>
+      </div>
+
+      <div class="upload-section">
+        <h2><i class="fas fa-upload"></i> Upload or Add Visa Requirements</h2>
+        <div class="upload-tabs">
+          <button class="tab-btn active" onclick="switchTab(event, 'upload')">
+            Upload CSV
+          </button>
+          <button class="tab-btn" onclick="switchTab(event, 'manual')">
+            Add Manually
+          </button>
+        </div>
+
+        <div id="upload" class="tab-content active">
+          <div class="upload-info">
+            <strong>CSV Format:</strong> Your CSV file should have columns:
+            country, visaType, requirements, processingTime, fees. <br />
+            <code
+              >Canada,Work,Passport;Education;Job Offer,10 business
+              days,150</code
+            >
+          </div>
+          <form
+            action="/admin/visas/upload"
+            method="POST"
+            enctype="multipart/form-data"
+            class="upload-form"
+          >
+            <div class="form-group">
+              <label for="csvFile">Select CSV File:</label>
+              <input
+                type="file"
+                id="csvFile"
+                name="file"
+                accept=".csv"
+                required
+              />
+            </div>
+            <button type="submit" class="btn">Upload CSV</button>
+          </form>
+        </div>
+
+        <div id="manual" class="tab-content">
+          <div class="upload-info">
+            Alternatively, you can add visa requirements one by one manually.
+          </div>
+          <a href="/admin/visas/new" class="btn">Open Add Visa Form</a>
+        </div>
+      </div>
+
+      <div class="grid">
+        <div class="card">
+          <h2><span>📋</span>Manage Visas</h2>
+          <p>
+            View, edit, and delete all visa requirements from your database.
+            Keep your visa information updated and organized.
+          </p>
+          <a href="/admin/visas" class="btn">Go to Visas</a>
+        </div>
+
+        <div class="card">
+          <h2><span>➕</span>Add Single Visa</h2>
+          <p>
+            Add a new visa requirement manually one at a time with detailed
+            information.
+          </p>
+          <a href="/admin/visas/new" class="btn">Add New Visa</a>
+        </div>
+
+        <div class="card">
+          <h2><span>📊</span>Statistics</h2>
+          <p>
+            View comprehensive statistics about your visa database at a glance.
+          </p>
+          <div class="stats-grid">
+            <div class="stat-box">
+              <div class="stat-number" id="total-visas">0</div>
+              <div class="stat-label">Total Visas</div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-number" id="unique-countries">0</div>
+              <div class="stat-label">Countries</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <footer>
+        <p>
+          &copy; <%= new Date().getFullYear() %> VisaTrack Admin Panel. All
+          rights reserved.
+        </p>
+      </footer>
+    </div>
+
+    <script>
+      function switchTab(event, tabName) {
+        event.preventDefault();
+        document.querySelectorAll(".tab-content").forEach((tab) => {
+          tab.classList.remove("active");
+        });
+        document.querySelectorAll(".tab-btn").forEach((btn) => {
+          btn.classList.remove("active");
+        });
+        document.getElementById(tabName).classList.add("active");
+        event.target.classList.add("active");
+      }
+
+      async function fetchStats() {
+        try {
+          const response = await fetch("/api/visa-requirements");
+          const visas = await response.json();
+          document.getElementById("total-visas").textContent =
+            visas.length || 0;
+          const countries = new Set(visas.map((v) => v.country));
+          document.getElementById("unique-countries").textContent =
+            countries.size || 0;
+        } catch (e) {
+          console.error("Error fetching stats:", e);
+          document.getElementById("total-visas").textContent = "—";
+          document.getElementById("unique-countries").textContent = "—";
+        }
+      }
+
+      fetchStats();
+    </script>
+  </body>
+</html>

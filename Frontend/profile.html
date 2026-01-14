@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> Profile Approval</title>
+    <link rel="stylesheet" href="profile.css">
+</head>
+<body>
+    <!-- Loading overlay shown on page load -->
+    <div id="loading-screening" class="loading-screen">
+        <div class="loader" aria-hidden="true"></div>
+        <div class="loader-text">Setting up your account...</div>
+    </div>
+
+    <!-- The success/content screen (hidden until loading finishes) -->
+    <div id="success-screen" class="hidden">
+        <div class="container">
+
+            <div class="success-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <polyline points="20 6  9 17 4 12"></polyline>
+                </svg>
+            </div>
+            <h1>Profile Setup Complete</h1>
+
+            <p>Your information has been saved successfully. You're all set to start  <br>tracking your visa application.</p>
+            <div id="tracking">
+                 <button id="starttracking" class="btn primary">Start Visa Tracking</button>
+                 <button id="viewprofile" class="btn secondary">View Profile</button>
+            </div>
+        
+
+        </div>
+    </div>
+
+    <script src="loading.js"></script>
+    <script src="profile.js"></script>
+</body>
+</html>

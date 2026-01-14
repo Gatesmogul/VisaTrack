@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Register - VisaTrack Admin</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: Arial, sans-serif;
+        background: #f5f5f5;
+      }
+      .container {
+        max-width: 400px;
+        margin: 50px auto;
+        background: white;
+        padding: 30px;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+      h1 {
+        margin-bottom: 20px;
+        color: #333;
+      }
+      .form-group {
+        margin-bottom: 15px;
+      }
+      label {
+        display: block;
+        margin-bottom: 5px;
+        color: #555;
+        font-weight: bold;
+      }
+      input {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-size: 14px;
+      }
+      input:focus {
+        outline: none;
+        border-color: #007bff;
+      }
+      button {
+        width: 100%;
+        padding: 10px;
+        background: #007bff;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        font-size: 16px;
+        cursor: pointer;
+      }
+      button:hover {
+        background: #0056b3;
+      }
+      .error {
+        background: #f8d7da;
+        color: #721c24;
+        padding: 10px;
+        border-radius: 4px;
+        margin-bottom: 15px;
+      }
+      .link {
+        text-align: center;
+        margin-top: 15px;
+      }
+      .link a {
+        color: #007bff;
+        text-decoration: none;
+      }
+      .link a:hover {
+        text-decoration: underline;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Create Admin Account</h1>
+      <% if (typeof error !== 'undefined' && error) { %>
+      <div class="error"><%= error %></div>
+      <% } %>
+      <form method="POST" action="/register" autocomplete="off">
+        <div class="form-group">
+          <label for="username">Username:</label>
+          <input
+            type="text"
+            id="username"
+            name="username"
+            required
+            autocomplete="username"
+          />
+        </div>
+        <div class="form-group">
+          <label for="password">Password:</label>
+          <input
+            type="password"
+            id="password"
+            name="password"
+            required
+            autocomplete="new-password"
+          />
+        </div>
+        <button type="submit">Create Account</button>
+      </form>
+      <div class="link">
+        Already have an account? <a href="/login">Login here</a>
+      </div>
+    </div>
+    <script>
+      // Clear inputs on load to avoid browser autofill showing previous credentials
+      window.addEventListener("DOMContentLoaded", function () {
+        try {
+          var u = document.getElementById("username");
+          var p = document.getElementById("password");
+          if (u) u.value = "";
+          if (p) p.value = "";
+          setTimeout(function () {
+            if (u) u.value = "";
+            if (p) p.value = "";
+          }, 50);
+        } catch (e) {}
+      });
+    </script>
+  </body>
+</html>

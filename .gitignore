@@ -39,3 +39,78 @@ yarn-error.*
 # generated native folders
 /ios
 /android
+
+# --- Remote/Generic Defaults ---
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+.pnpm-debug.log*
+
+# Diagnostic reports
+report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Coverage
+lib-cov
+coverage
+*.lcov
+.nyc_output
+
+# Caches
+.grunt
+bower_components
+.lock-wscript
+build/Release
+jspm_packages/
+typings/
+.npm
+.eslintcache
+.stylelintcache
+.rpt2_cache/
+.rts2_cache_cjs/
+.rts2_cache_es/
+.rts2_cache_umd/
+.node_repl_history
+*.tgz
+.yarn-integrity
+
+# Frameworks
+.cache
+.parcel-cache
+.next
+out
+.nuxt
+.serverless/
+.fusebox/
+.dynamodb/
+
+# IDEs
+.tern-port
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+!.vscode/breakpoints.json
+.history/
+*.vsix
+.idea/
+*.iml
+
+# OS
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db

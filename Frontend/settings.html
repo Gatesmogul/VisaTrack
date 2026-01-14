@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Settings</title>
+    <link rel="stylesheet" href="CSS/Pages/settings.css" />
+  </head>
+  <body>
+    <main class="settings-container">
+      <header class="settings-header">
+        <img
+          src="https://res.cloudinary.com/drl7zfjot/image/upload/v1767626952/IMG_6771_2_pizeob.png"
+          alt="App Icon"
+          class="app-icon"
+        />
+        <h1>Settings</h1>
+      </header>
+      <section class="profile-card">
+        <div class="profile-info">
+          <div class="profile-text">
+            <h2 id="userName">User Name</h2>
+            <p class="verified">
+              Verified Member
+              <span class="verified-dot"></span>
+            </p>
+          </div>
+        </div>
+
+        <button class="edit-profile-btn" id="editProfileBtn">
+          Edit Profile
+        </button>
+      </section>
+      <section class="settings-section">
+        <h3>Account</h3>
+        <div class="settings-card">
+          <div class="row">
+            <span>Passport Country</span>
+            <span class="value" id="passportCountry">—</span>
+          </div>
+          <div class="row">
+            <span>Country of Residence</span>
+            <span class="value" id="residenceCountry">—</span>
+          </div>
+          <div class="row">
+            <span>Email Address</span>
+            <span class="value link" id="emailAddress">—</span>
+          </div>
+        </div>
+      </section>
+      <section class="settings-section">
+        <h3>Preferences</h3>
+        <div class="settings-card">
+          <div class="row">
+            <span>Language</span>
+            <span class="value" id="language">—</span>
+          </div>
+          <div class="row">
+            <span>Currency Display</span>
+            <span class="value" id="currency">—</span>
+          </div>
+          <div class="row">
+            <span>Date Format</span>
+            <span class="value" id="dateFormat">—</span>
+          </div>
+          <div class="row">
+            <span>Default Trip View</span>
+            <span class="value" id="tripView">—</span>
+          </div>
+        </div>
+      </section>
+      <section class="settings-section">
+        <h3>Notifications</h3>
+        <div class="notifications-list" id="notificationsList"></div>
+      </section>
+
+      <nav class="bottom-nav">
+        <button class="nav-item active" data-page="home">
+          <img
+            src="https://res.cloudinary.com/drl7zfjot/image/upload/v1767632377/Vector_o9h3zm.png"
+            alt="Home"
+          />
+          <small>Home</small>
+        </button>
+        <button class="nav-item" data-page="trip">
+          <img
+            src="https://res.cloudinary.com/drl7zfjot/image/upload/v1768086175/Vector_3_if4tru.png"
+            alt="Trip"
+          />
+          <small>Trip</small>
+        </button>
+        <button class="nav-item" data-page="track">
+          <img
+            src="https://res.cloudinary.com/drl7zfjot/image/upload/v1767632376/Group_udexex.png"
+            alt="Track"
+          />
+          <small>Track</small>
+        </button>
+        <button class="nav-item" data-page="settings">
+          <img
+            src="https://res.cloudinary.com/drl7zfjot/image/upload/v1767632377/Vector-2_xkwkeq.png"
+            alt="Settings"
+          />
+          <small>Settings</small>
+        </button>
+      </nav>
+    </main>
+    <script src="JS/settings.js"></script>
+  </body>
+</html>
