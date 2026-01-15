@@ -5,7 +5,7 @@
 
 body {
   margin: 0;
-  background: #f4f6f8;
+  background: #fff;
   display: flex;
   justify-content: center;
 }
@@ -15,7 +15,7 @@ body {
   width: 100%;
   max-width: 420px;
   min-height: 100vh;
-  background: #fff;
+  background: #ffff;
   display: flex;
   flex-direction: column;
   padding: 16px;
@@ -184,9 +184,48 @@ color: white;
 }
 
 /* Desktop */
-@media (min-width: 768px) {
+@media (min-width: 1024px) {
   body {
+    background: white;
     align-items: center;
     min-height: 100vh;
+  }
+
+  .app {
+    max-width: 1300px;
+    min-height: auto;
+    padding: 20px;
+    border:none ;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+  }
+
+  .header {
+    margin-bottom: 20px;
+  }
+
+  .title h2 {
+    font-size: 24px;
+  }
+
+  .content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+  }
+
+  /* Make info box span full width */
+  .info {
+    grid-column: span 2;
+  }
+
+  /* Footer button aligned right */
+  .footer {
+    display: flex;
+    justify-content: center;
+    margin-top: 40px;
+  }
+
+  .next-btn {
+    width: 1000px;
   }
 }

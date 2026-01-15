@@ -167,17 +167,51 @@ button {
 }
 
 /* Tablet & Desktop Enhancements */
-@media (min-width: 768px) {
-  .container {
-    max-width: 520px;
-  }
-}
-
 @media (min-width: 1024px) {
   body {
     display: flex;
     justify-content: center;
     align-items: center;
     min-height: 100vh;
+    background: #e8ebf0;
   }
+
+  .container {
+    max-width: 1300px;
+    padding: 40px;
+    border-radius: 18px;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.1);
+  }
+
+  .success-icon img {
+    width: 90px;
+  }
+
+  .fully {
+    font-size: 26px;
+    margin-bottom: 30px;
+  }
+
+  .doc-list li {
+    font-size: 15px;
+    padding: 14px 0;
+  }
+
+  .actions a {
+    font-size: 14px;
+  }
+
+  /* Alert box spacing */
+  .alert-box {
+    padding: 20px;
+    margin-bottom: 30px;
+  }
+
+  /* Buttons side-by-side */
+  .primary-btn,
+  .secondary-btn {
+    width: 48%;
+  }
+
+  
 }

@@ -198,6 +198,9 @@ color: white;
 
 @media (min-width: 1024px) {
 body {
+  .container {
+    max-width: 1300px;
+  }
     display: flex;
     justify-content: center;
     align-items: center;
