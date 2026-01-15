@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VisaTrack - Trip Feasibility Checker</title>
+    <link rel="stylesheet" href="Feasibility.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+
+<div class="container">
+
+     <div class="card">
+        <header class="header">
+            <h1>VisaTrack</h1>
+            <p>Trip Feasibility Checker</p>
+        </header>
+   
+
+        <div class="content">
+            <section class="section">
+                <h2 class="section-title">Plan Your Journey</h2>
+                <div class="input-row">
+                    <div class="input-group">
+                        <label>Destination Country</label>
+                        <input type="text" id="countryInput" placeholder="Enter country name">
+                    </div>
+                    <div class="input-group">
+                        <label>Planned Entry Date</label>
+                        <input type="date" id="entryDate">
+                    </div>
+                    <div class="input-group">
+                        <label>Planned Exit Date</label>
+                        <input type="date" id="exitDate">
+                    </div>
+                </div>
+                
+                <div class="actions">
+                    <button id="addDestBtn" class="btn-secondary"><i class="fas fa-plus"></i> Add Destination</button>
+                </div>
+
+                <div id="destinationList" class="tag-container">
+                    <div class="tag blue-tag">France (2024-06-15 to 07-30) <i class="fas fa-times-circle remove-tag"></i></div>
+                </div>
+            </section>
+
+            <section id="errorAlert" class="error-alert">
+                <div class="error-icon"><i class="fas fa-times-circle"></i></div>
+                <div class="error-text">
+                    <h3>Impossible Timeline Detected!</h3>
+                    <p>Your planned travel dates do not allow sufficient time for visa processing.</p>
+                    <span id="errorDetails">• Japan: Insufficient time for processing.</span>
+                </div>
+            </section>
+
+            <div class="challenges-grid">
+                <div class="challenge-box warning">
+                    <i class="fas fa-hourglass-half"></i>
+                    <div>
+                        <strong>Long Processing Time</strong>
+                        <p>Estimated Processing: 60-90 business days.</p>
+                    </div>
+                </div>
+                <div class="challenge-box info">
+                    <i class="fas fa-list-ul"></i>
+                    <div>
+                        <strong>Country Special Visa Required</strong>
+                        <p>1. Apply for Japan visa (urgent)</p>
+                        <p>2. Apply for France visa (standard)</p>
+                    </div>
+                </div>
+            </div>
+
+            <button id="checkFeasibility" class="btn-primary">
+                <i class="fas fa-plane"></i> Check Trip Feasibility
+            </button>
+        </div>
+    </div>
+</div>
+
+<script src="Feasibility.js"></script>
+</body>
+</html>

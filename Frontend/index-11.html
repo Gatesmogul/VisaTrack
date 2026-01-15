@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Visa Information</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<div class="container">
+  <h1>Visa Information</h1>
+
+  <!-- INPUT FORM -->
+  <form id="visaForm" class="card">
+    <h2>Applicant Details</h2>
+
+    <input type="text" id="fullName" placeholder="Full Name" required />
+    <input type="text" id="passportCountry" placeholder="Passport Country" required />
+    <input type="text" id="residenceCountry" placeholder="Country of Residence" required />
+    <input type="email" id="email" placeholder="Email Address" required />
+
+    <label class="upload">
+      Upload Passport
+      <input type="file" id="passportUpload" accept="image/*" required />
+    </label>
+
+    <button type="submit">Load Visa Information</button>
+  </form>
+
+  <!-- VISA INFORMATION (HIDDEN UNTIL SUBMIT) -->
+  <div id="visaInfo" class="hidden">
+
+    <!-- PROFILE -->
+    <div class="card profile">
+      <img id="passportPreview" src="" alt="Passport Preview" />
+      <h3 id="nameDisplay"></h3>
+      <p class="verified">Verified Member ✔</p>
+
+      <p><b>Passport Country:</b> <span id="passportDisplay"></span></p>
+      <p><b>Country of Residence:</b> <span id="residenceDisplay"></span></p>
+      <p><b>Email Address:</b> <span id="emailDisplay"></span></p>
+    </div>
+
+    <!-- REQUIRED DOCUMENTS -->
+    <div class="card">
+      <h3>Required Documents</h3>
+      <p><b>Passport Validity:</b> Minimum 6 months</p>
+
+      <label class="upload">
+        Upload Financial Proof:
+        <input type="file" id="financialUpload" accept="image/*,application/pdf" />
+      </label>
+
+      <label class="upload">
+        Upload Invitation Letter (if applicable):
+        <input type="file" id="invitationUpload" accept="image/*,application/pdf" />
+      </label>
+    </div>
+
+    <!-- APPLICATION FORMS -->
+    <div class="card">
+      <h3>Application Forms & Where to Obtain</h3>
+      <p>Available on official embassy websites or visa application centers.</p>
+    </div>
+
+    <!-- PROCESSING TIME -->
+    <div class="card">
+      <h3>Processing Times</h3>
+      <p><b>Normal:</b> 7 – 21 working days</p>
+      <p><b>Expedited:</b> 2 – 5 working days</p>
+    </div>
+
+    <!-- COSTS -->
+    <div class="card">
+      <h3>Costs & Payment Methods</h3>
+      <p>Visa fees vary by country. Payment via card, transfer, or cash.</p>
+    </div>
+
+    <!-- VALIDITY -->
+    <div class="card">
+      <h3>Validity Period & Allowed Stay</h3>
+      <p>Validity: 30 days – 1 year | Allowed Stay: 7 – 90 days</p>
+    </div>
+
+    <!-- ENTRY RESTRICTIONS -->
+    <div class="card">
+      <h3>Entry Restrictions & Conditions</h3>
+      <p>Return ticket, travel insurance, and compliance with immigration rules required.</p>
+    </div>
+
+  </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
+
+
+
+

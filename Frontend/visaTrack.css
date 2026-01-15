@@ -1,0 +1,174 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Segoe UI", Tahoma, sans-serif;
+}
+
+:root {
+  --primary: #1a1f71; /* Deep Navy */
+  --accent: #f7b600;  /* Golden Accent */
+  --bg: #f4f6f9;
+  --text: #333;
+}
+
+body {
+  background: #f4f6f9;
+  color: #333;
+}
+
+.container {
+  max-width: 900px;
+  margin: 40px auto;
+  padding: 0 20px;
+}
+
+.page-header {
+  margin-bottom: 30px;
+}
+
+.page-header h1 {
+  font-size: 28px;
+  margin-bottom: 6px;
+}
+
+.page-header p {
+  color: #666;
+}
+
+/* Card */
+.card {
+  background: #fff;
+  padding: 20px;
+  border-radius: 12px;
+  margin-bottom: 20px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.05);
+}
+
+.card h2 {
+  font-size: 18px;
+  margin-bottom: 15px;
+}
+
+/* Form Grid */
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px;
+}
+
+input,
+select,
+textarea {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+}
+
+textarea {
+  resize: vertical;
+}
+
+/* Upload Box */
+.upload-box {
+  border: 2px dashed #cbd5e1;
+  padding: 30px;
+  border-radius: 12px;
+  text-align: center;
+  margin-bottom: 15px;
+  background: #f9fbfd;
+}
+
+.upload-box p {
+  font-weight: 500;
+  margin-bottom: 5px;
+}
+
+.upload-box span {
+  display: block;
+  margin: 8px 0;
+  color: #777;
+}
+
+/* Buttons */
+.primary-btn {
+  background: var(--primary);
+  color: #fff;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.page-header .brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.logo {
+  width: 48px;
+  height: auto;
+  object-fit: contain;
+  display: block;
+}
+
+.brand-text h1 {
+  margin: 0;
+  font-size: 1.4rem;
+  line-height: 1.1;
+}
+.page-header p {
+  margin: 4px 0 0 0;
+  color: #666;
+  font-size: 0.95rem;
+}
+
+/* Responsive tweaks */
+@media (max-width: 600px) {
+  .logo { width: 36px; }
+  .brand-text h1 { font-size: 1.1rem; }
+  .page-header .brand { gap: 8px; }
+}
+@media (min-width: 1024px) {
+  .logo { width: 64px; }
+  .brand-text h1 { font-size: 1.8rem; }
+}
+
+.secondary-btn {
+  background: transparent;
+  border: 1px solid var(--primary);
+  color: var(--primary);
+  padding: 10px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.link-btn {
+  margin-top: 10px;
+  background: none;
+  border: none;
+  color: var(--primary);
+  cursor: pointer;
+  font-size: 14px;
+}
+
+/* File List */
+.file-list {
+  list-style: none;
+}
+
+.file-list li {
+  padding: 8px 0;
+  font-size: 14px;
+}
+
+/* Actions */
+.actions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  margin-top: 30px;
+}
