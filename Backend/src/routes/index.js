@@ -1,19 +1,20 @@
+import documentRoutes from "./document.routes.js";
+import embassyRoutes from "./embassy.routes.js";
+import notificationRoutes from "./notification.routes.js";
+import tripRoutes from "./trip.routes.js";
+import tripDestinationRoutes from "./tripDestination.routes.js";
 import userRoutes from "./user.routes.js";
- import visaRoutes from "./visa.routes.js";
- import visaAppRoutes from "./visaApplication.routes.js";
- import documentRoutes from "./document.routes.js";
- import notificationRoutes from "./notification.routes.js";
- import tripRoutes from "./trip.routes.js";
- import tripDestinationRoutes from "./tripDestination.routes.js";
+import visaRoutes from "./visa.routes.js";
+import visaAppRoutes from "./visaApplication.routes.js";
 
 
 export default function registerRoutes(app) {
-  app.use("/api", userRoutes);
- 
-  app.use("/api", visaRoutes);
-   app.use("/api", visaAppRoutes);
-   app.use("/api", documentRoutes);
-   app.use("/api", notificationRoutes);
-   app.use("/api", tripRoutes);
-   app.use("/api", tripDestinationRoutes);
+  app.use("/api/v1", userRoutes);
+  app.use("/api/v1", visaRoutes);
+  app.use("/api/v1", visaAppRoutes);
+  app.use("/api/v1", documentRoutes);
+  app.use("/api/v1", notificationRoutes);
+  app.use("/api/v1", tripRoutes);
+  app.use("/api/v1", tripDestinationRoutes);
+  app.use("/api/v1/embassies", embassyRoutes);
 }

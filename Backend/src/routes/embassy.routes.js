@@ -1,18 +1,18 @@
 import express from 'express';
+import { authMiddleware } from '../middlewares/auth.middleware.js';
 import {
     createEmbassy,
+    deleteEmbassy,
     getEmbassies,
     getEmbassyById,
-    updateEmbassy,
-    deleteEmbassy
+    updateEmbassy
 } from '../services/embassy.service.js';
-import { authMiddleware } from '../middlewares/auth.middleware.js';
 
 const router = express.Router();
 
 /**
  * @swagger
- * /embassy:
+ * /embassies:
  *   get:
  *     summary: List all embassies
  *     description: Retrieve a list of embassies with optional filtering.
@@ -66,7 +66,7 @@ router.get('/', async (req, res) => {
 
 /**
  * @swagger
- * /embassy/{id}:
+ * /embassies/{id}:
  *   get:
  *     summary: Get embassy by ID
  *     description: Retrieve detailed information about a specific embassy.
