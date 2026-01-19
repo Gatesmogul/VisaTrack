@@ -1,7 +1,9 @@
 import { signIn } from "@/firebase/auth";
 import { auth } from "@/firebase/firebase.config";
+import { useGoogleAuth } from "@/firebase/googleAuth";
+import { registerForPushNotificationsAsync } from "@/services/pushNotifications";
 import { useRouter } from "expo-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   ActivityIndicator,
   Alert,
@@ -13,79 +15,123 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { useAuthStore } from "../../store/auth";
-
 
 const API_URL = process.env.EXPO_PUBLIC_API_URL;
 
 export default function SignIn() {
-  
-  
   const router = useRouter();
-  const setUser = useAuthStore((s) => s.setUser);
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [remember, setRemember] = useState(false);
+  const [secure, setSecure] = useState(true);
+  const [loading, setLoading] = useState(false);
 
-  const [secure, setSecure] = useState(true);   // 👈 toggle state
-  const [loading, setLoading] = useState(false); // 👈 loading state
+  // ✅ GOOGLE AUTH
+  const { promptAsync, handleGoogleResponse } = useGoogleAuth();
 
- async function handleSignIn() {
-  try {
-    setLoading(true);
+  useEffect(() => {
+    handleGoogleResponse();
+  }, []);
 
-    const user = await signIn(email, password);
+  async function syncPushToken() {
+    const token = await registerForPushNotificationsAsync();
+    if (!token) return;
 
-    // 1. Email verification gate
-    if (!user.emailVerified) {
-      Alert.alert(
-        "Verify your email",
-        "Please check your inbox and verify your email before continuing."
-      );
-      setLoading(false);
-      return;
-    }
+    const idToken = await auth.currentUser?.getIdToken();
 
-    // 2. Ask backend who this user is
-    const token = await auth.currentUser!.getIdToken();
-
-    const res = await fetch(`${API_URL}/users/profile/personal`, {
+    await fetch(`${API_URL}/users/push-token`, {
+      method: "POST",
       headers: {
-        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${idToken}`,
       },
+      body: JSON.stringify({ expoPushToken: token }),
     });
-
-    const data = await res.json();
-
-    // 3. Routing decisions
-    if (!data.acceptedTerms) {
-      router.replace("/terms");
-      return;
-    }
-
-    if (!data.profileCompleted) {
-      router.replace("/profile");
-      return;
-    }
-
-    // 4. All checks passed → dashboard
-    router.replace("/(tabs)");
-
-  } catch (err: any) {
-    Alert.alert("Login error", err.message);
-  } finally {
-    setLoading(false);
   }
-}
 
+  async function handleSignIn() {
+    try {
+      setLoading(true);
+
+      const user = await signIn(email.trim(), password);
+
+      /**
+       * 1️⃣ Firebase email verification gate
+       * Backend assumes EMAIL_VERIFIED is already true
+       */
+      if (!user.emailVerified) {
+        router.replace("/(auth)/verify-email");
+        return;
+      }
+
+      /**
+       * 2️⃣ Get fresh ID token for backend
+       */
+      const token = await auth.currentUser?.getIdToken(true);
+      if (!token) throw new Error("Missing auth token");
+
+      /**
+       * 3️⃣ Backend is the single source of truth
+       */
+      const res = await fetch(`${API_URL}/users/me`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (!res.ok) {
+        throw new Error("Failed to fetch user profile");
+      }
+
+      const data = await res.json();
+
+      /**
+       * 4️⃣ Route strictly by SERVER status
+       */
+      switch (data.status) {
+        case "NEW":
+          // Should be rare, but safest fallback
+          router.replace("/(auth)/verify-email");
+          return;
+
+        case "EMAIL_VERIFIED":
+          router.replace("/(app)/terms");
+          return;
+
+        case "PROFILE_INCOMPLETE":
+          router.replace("/(auth)/profile");
+          return;
+
+        case "ACTIVE":
+          break;
+
+        default:
+          throw new Error(`Unknown user status: ${data.status}`);
+      }
+
+      /**
+       * 5️⃣ Fire-and-forget push token sync
+       */
+      syncPushToken().catch(() => {});
+
+      /**
+       * 6️⃣ Enter app
+       */
+      router.replace("/(tabs)/home");
+    } catch (err: any) {
+      Alert.alert("Login error", err.message || "Sign in failed");
+    } finally {
+      setLoading(false);
+    }
+  }
 
   return (
     <View style={styles.container}>
       {/* HEADER */}
       <View style={styles.headerWrap}>
         <Image
-          source={require("../../assets/images/header.png")}
+          source={require("../../assets/images/logo1.png")}
           style={styles.logo}
         />
         <Text style={styles.appTitle}>VisaTrack</Text>
@@ -99,6 +145,7 @@ export default function SignIn() {
         <Text style={styles.label}>Email Address</Text>
         <TextInput
           placeholder="you@example.com"
+          placeholderTextColor="#999"
           value={email}
           onChangeText={setEmail}
           style={styles.input}
@@ -115,6 +162,7 @@ export default function SignIn() {
         <View style={styles.passwordWrap}>
           <TextInput
             placeholder="********"
+            placeholderTextColor="#999"
             secureTextEntry={secure}
             value={password}
             onChangeText={setPassword}
@@ -122,7 +170,6 @@ export default function SignIn() {
             editable={!loading}
           />
 
-          {/* 👁 TOGGLE */}
           <TouchableOpacity
             onPress={() => setSecure(!secure)}
             style={styles.eyeButton}
@@ -148,7 +195,7 @@ export default function SignIn() {
         </TouchableOpacity>
       </View>
 
-      {/* PRIMARY BUTTON */}
+      {/* SIGN IN */}
       <Pressable
         style={[styles.primaryButton, loading && { opacity: 0.6 }]}
         onPress={handleSignIn}
@@ -169,27 +216,17 @@ export default function SignIn() {
       </View>
 
       {/* GOOGLE */}
-      <TouchableOpacity style={styles.socialButton} disabled={loading}>
+      <TouchableOpacity
+        style={styles.socialButton}
+        onPress={() => promptAsync()}
+        disabled={loading}
+      >
         <Image
           source={require("../../assets/images/google.png")}
           style={styles.icon}
         />
         <Text style={styles.socialText}>Continue with Google</Text>
       </TouchableOpacity>
-
-      {/* FACEBOOK */}
-      <TouchableOpacity style={styles.socialButton} disabled={loading}>
-        <Image
-          source={require("../../assets/images/facebook.png")}
-          style={styles.icon}
-        />
-        <Text style={styles.socialText}>Continue with Facebook</Text>
-      </TouchableOpacity>
-
-      {/* FOOTER */}
-      <Text style={styles.footer}>
-        By signing in, you agree to our Terms of Service and Privacy Policy
-      </Text>
     </View>
   );
 }
@@ -218,6 +255,7 @@ const styles = StyleSheet.create({
     padding: 14,
     fontSize: 15,
     backgroundColor: "#fff",
+    color: "#000",
   },
 
   passwordWrap: {
@@ -234,6 +272,7 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 14,
     fontSize: 15,
+    color: "#000",
   },
 
   eyeButton: { paddingHorizontal: 6 },
@@ -297,11 +336,4 @@ const styles = StyleSheet.create({
   icon: { width: 20, height: 20, marginRight: 12 },
 
   socialText: { fontSize: 15, fontWeight: "500" },
-
-  footer: {
-    textAlign: "center",
-    color: "#777",
-    fontSize: 12,
-    marginTop: 10,
-  },
 });

@@ -1,51 +1,67 @@
-import { getFirebaseIdToken } from "@/firebase/getIdToken";
+import { Ionicons } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useRouter } from "expo-router";
-import { useEffect } from "react";
-import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
-
-const API_URL = process.env.EXPO_PUBLIC_API_URL;
+import { useEffect, useState } from "react";
+import {
+  ActivityIndicator,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 
 export default function ProfileSetupLoading() {
   const router = useRouter();
+  const [completed, setCompleted] = useState(false);
 
   useEffect(() => {
-    async function setupAccount() {
+    async function finalize() {
       try {
-        const personal = JSON.parse(await AsyncStorage.getItem("profile") || "{}");
-        const contact = JSON.parse(await AsyncStorage.getItem("contact") || "{}");
-        const passport = JSON.parse(await AsyncStorage.getItem("passport") || "{}");
+        // Clear temp storage (profile setup drafts)
+        await AsyncStorage.multiRemove([
+          "profile",
+          "contact",
+          "passport",
+        ]);
 
-        const token = await getFirebaseIdToken();
+        // Show success state
+        setCompleted(true);
 
-        await fetch(`${API_URL}/users/profile/passport`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`
-          },
-          body: JSON.stringify({ personal, contact, passport })
-        });
-
-        // Clear temp storage
-        await AsyncStorage.multiRemove(["profile", "contact", "passport"]);
-
-        // Go to Sign In
-        router.replace("/signInScreen");
+        // Redirect after short pause
+        setTimeout(() => {
+          router.replace("./profile-complete");
+        }, 2000);
       } catch (e) {
-        console.error(e);
+        console.error("Setup finalization failed", e);
       }
     }
 
-    setupAccount();
+    finalize();
   }, []);
 
   return (
     <View style={styles.container}>
-      <ActivityIndicator size="large" />
-      <Text style={styles.text}>
-        Setting up your account… please wait
-      </Text>
+      {!completed ? (
+        <>
+          <ActivityIndicator size="large" />
+          <Text style={styles.text}>
+            Setting up your account…
+          </Text>
+        </>
+      ) : (
+        <>
+          <Ionicons
+            name="checkmark-circle"
+            size={96}
+            color="#22C55E"
+          />
+          <Text style={styles.successTitle}>
+            Profile Completed
+          </Text>
+          <Text style={styles.successText}>
+            Your account is ready 🎉
+          </Text>
+        </>
+      )}
     </View>
   );
 }
@@ -54,10 +70,23 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: "center",
-    alignItems: "center"
+    alignItems: "center",
+    padding: 20,
+    backgroundColor: "#FFF",
   },
   text: {
     marginTop: 12,
-    fontSize: 14
-  }
+    fontSize: 14,
+    color: "#444",
+  },
+  successTitle: {
+    marginTop: 16,
+    fontSize: 20,
+    fontWeight: "600",
+  },
+  successText: {
+    marginTop: 6,
+    fontSize: 14,
+    color: "#555",
+  },
 });

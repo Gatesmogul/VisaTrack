@@ -16,6 +16,7 @@ type Notification = {
   createdAt: string;
 };
 
+const API_URL = process.env.EXPO_PUBLIC_API_URL;
 export default function NotificationsScreen() {
   const router = useRouter();
   const [notifications, setNotifications] = useState<Notification[]>([]);
@@ -25,7 +26,7 @@ export default function NotificationsScreen() {
   }, []);
 
   async function fetchNotifications() {
-    const res = await fetch("https://your-api.com/notifications", {
+    const res = await fetch(`${API_URL}/notifications"`, {
       headers: {
         Authorization: "Bearer TOKEN_HERE",
       },

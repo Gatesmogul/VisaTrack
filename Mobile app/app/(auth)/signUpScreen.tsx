@@ -1,71 +1,68 @@
-import { signUp } from '@/firebase/auth';
-import { signInWithFacebook } from '@/firebase/facebookAuth';
-import { auth } from '@/firebase/firebase.config';
-import { useGoogleAuth } from "@/firebase/googleAuth";
-import { syncUser } from '@/services/user';
-import { useRouter } from 'expo-router';
-import { useEffect, useState } from 'react';
+import { auth } from "@/firebase/firebase.config";
+import { useRouter } from "expo-router";
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { useEffect, useState } from "react";
 import {
+  Alert,
   Image,
   StyleSheet,
   Text,
   TextInput,
   TouchableOpacity,
   View,
-} from 'react-native';
-import { colors, spacing } from '../theme';
+} from "react-native";
 
-
-
-
+import { colors, spacing } from "@/constants";
+import { useGoogleAuth } from "@/firebase/googleAuth";
 
 export default function SignUpScreen() {
   const router = useRouter();
 
-  const [fullName, setFullName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [fullName, setFullName] = useState("");
+  const [loading, setLoading] = useState(false);
+
   const { promptAsync, handleGoogleResponse } = useGoogleAuth();
 
-
+  // ✅ REQUIRED: handle Google result once
   useEffect(() => {
     handleGoogleResponse();
   }, []);
 
-async function handleSignUp() {
-  try {
-    // 1. Create Firebase user
-    await signUp(email, password);
+  async function handleSignUp() {
+    if (!email || !password) {
+      Alert.alert("Missing fields");
+      return;
+    }
 
-    const user = auth.currentUser;
-    if (!user) return;
+    try {
+      setLoading(true);
 
-    // 2. Send verification email
-   // await user.sendEmailVerification();
-    // 3. Sync user to backend
-    await syncUser({
-      firebaseUid: user.uid,
-      email,
-      fullName,
-    });
+      const res = await createUserWithEmailAndPassword(
+        auth,
+        email.trim(),
+        password,
+      );
 
-    // 4. Go to Verify Email screen
-    router.replace("/verify-email");
-  } catch (err: any) {
-    alert(err.message || "Sign up failed");
+      await res.user.reload();
+
+      // 🔀 go to verify email
+      router.replace("/(auth)/verify-email");
+    } catch (err: any) {
+      Alert.alert("Sign up error", err?.message ?? "Unknown error");
+    } finally {
+      setLoading(false);
+    }
   }
-}
-
 
   return (
     <View style={styles.container}>
-
-      {/* Header Logo + Title */}
+      {/* Header */}
       <View style={styles.headerWrap}>
         <Image
-          source={require('../../assets/images/header.png')}
+          source={require("../../assets/images/logo1.png")}
           style={styles.logo}
-          resizeMode="contain"
         />
         <Text style={styles.appTitle}>VisaTrack</Text>
       </View>
@@ -80,6 +77,7 @@ async function handleSignUp() {
           style={styles.input}
           value={fullName}
           onChangeText={setFullName}
+          placeholderTextColor={colors.muted}
         />
       </View>
 
@@ -93,6 +91,7 @@ async function handleSignUp() {
           style={styles.input}
           value={email}
           onChangeText={setEmail}
+          placeholderTextColor={colors.muted}
         />
       </View>
 
@@ -105,12 +104,19 @@ async function handleSignUp() {
           style={styles.input}
           value={password}
           onChangeText={setPassword}
+          placeholderTextColor={colors.muted}
         />
       </View>
 
-      {/* Primary Button */}
-      <TouchableOpacity style={styles.primaryButton} onPress={handleSignUp}>
-        <Text style={styles.primaryButtonText}>Create Account</Text>
+      {/* Create Account */}
+      <TouchableOpacity
+        style={styles.primaryButton}
+        onPress={handleSignUp}
+        disabled={loading}
+      >
+        <Text style={styles.primaryButtonText}>
+          {loading ? "Creating..." : "Create Account"}
+        </Text>
       </TouchableOpacity>
 
       {/* Divider */}
@@ -120,31 +126,24 @@ async function handleSignUp() {
         <View style={styles.line} />
       </View>
 
-      {/* Google Button */}
-      <TouchableOpacity style={styles.socialButton}
-        onPress={()=>promptAsync()}>
+      {/* Google */}
+      <TouchableOpacity
+        style={styles.socialButton}
+        onPress={() => promptAsync()}
+      >
         <Image
-          source={require('../../assets/images/google.png')}
+          source={require("../../assets/images/google.png")}
           style={styles.socialIcon}
         />
         <Text style={styles.socialText}>Continue with Google</Text>
       </TouchableOpacity>
 
-      {/* Facebook Button */}
-      <TouchableOpacity style={styles.socialButton}
-        onPress={signInWithFacebook}
-      >
-        <Image
-          source={require('../../assets/images/facebook.png')}
-          style={styles.socialIcon}
-        />
-        <Text style={styles.socialText}>Continue with Facebook</Text>
-      </TouchableOpacity>
-
       {/* Footer */}
       <View style={styles.footer}>
         <Text style={styles.footerText}>Already have an account? </Text>
-        <TouchableOpacity onPress={() => router.push('/(tabs)')}>
+        <TouchableOpacity
+          onPress={() => router.replace("/(auth)/signInScreen")}
+        >
           <Text style={styles.link}>Log in</Text>
         </TouchableOpacity>
       </View>
@@ -155,43 +154,31 @@ async function handleSignUp() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.background,
+    backgroundColor: colors.white,
     padding: spacing.lg,
   },
 
   headerWrap: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     marginBottom: spacing.md,
     marginTop: spacing.lg,
   },
 
-  logo: {
-    width: 36,
-    height: 36,
-    marginRight: 6,
-  },
+  logo: { width: 36, height: 36, marginRight: 6 },
 
-  appTitle: {
-    fontSize: 22,
-    fontWeight: '700',
-  },
+  appTitle: { fontSize: 22, fontWeight: "700", color: colors.text },
 
   screenTitle: {
     fontSize: 18,
-    fontWeight: '600',
+    fontWeight: "600",
     marginBottom: spacing.lg,
+    color: colors.text,
   },
 
-  inputGroup: {
-    marginBottom: spacing.md,
-  },
+  inputGroup: { marginBottom: spacing.md },
 
-  label: {
-    fontSize: 14,
-    marginBottom: 6,
-    color: colors.textPrimary,
-  },
+  label: { fontSize: 14, marginBottom: 6, color: colors.text },
 
   input: {
     height: 50,
@@ -200,76 +187,53 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     paddingHorizontal: spacing.md,
     fontSize: 15,
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
+    color: colors.text, // ✅ FIXED: password visibility
   },
 
   primaryButton: {
     height: 50,
     borderRadius: 12,
     backgroundColor: colors.primary,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     marginTop: spacing.lg,
   },
 
-  primaryButtonText: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: '600',
-  },
+  primaryButtonText: { color: "#fff", fontSize: 16, fontWeight: "600" },
 
   dividerWrap: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     marginVertical: spacing.lg,
   },
 
-  line: {
-    flex: 1,
-    height: 1,
-    backgroundColor: colors.border,
-  },
+  line: { flex: 1, height: 1, backgroundColor: colors.border },
 
-  orText: {
-    marginHorizontal: 10,
-    color: colors.muted,
-  },
+  orText: { marginHorizontal: 10, color: colors.muted },
 
   socialButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     borderWidth: 1,
     borderColor: colors.border,
     height: 50,
     borderRadius: 12,
     paddingHorizontal: spacing.md,
-    marginBottom: spacing.sm,
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
   },
 
-  socialIcon: {
-    width: 20,
-    height: 20,
-    marginRight: 12,
-  },
+  socialIcon: { width: 20, height: 20, marginRight: 12 },
 
-  socialText: {
-    fontSize: 15,
-    fontWeight: '500',
-  },
+  socialText: { fontSize: 15, fontWeight: "500", color: colors.text },
 
   footer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
+    flexDirection: "row",
+    justifyContent: "center",
     marginTop: spacing.lg,
   },
 
-  footerText: {
-    fontSize: 14,
-  },
+  footerText: { fontSize: 14, color: colors.text },
 
-  link: {
-    color: colors.primary,
-    fontWeight: '600',
-  },
+  link: { color: colors.primary, fontWeight: "600" },
 });
