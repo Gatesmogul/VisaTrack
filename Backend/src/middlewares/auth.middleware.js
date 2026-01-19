@@ -18,8 +18,13 @@ export const authMiddleware = async (req, res, next) => {
       user = await User.create({
         authUserId: decoded.uid,
         email: decoded.email,
+        fullName: decoded.name || '',
         emailVerified: decoded.email_verified || false,
       });
+    } else if (decoded.name && !user.fullName) {
+      // Sync names if they were added later
+      user.fullName = decoded.name;
+      await user.save();
     }
 
     req.user = {

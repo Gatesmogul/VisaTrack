@@ -53,7 +53,7 @@ const router = express.Router();
  *               items:
  *                 $ref: '#/components/schemas/Notification'
  */
-router.get("/notifications", authMiddleware, getMyNotifications);
+router.get("/", authMiddleware, getMyNotifications);
 
 /**
  * @swagger
@@ -74,7 +74,7 @@ router.get("/notifications", authMiddleware, getMyNotifications);
  *       200:
  *         description: Notification marked as read
  */
-router.patch("/notifications/:id/read", authMiddleware, markAsRead);
+router.patch("/:id/read", authMiddleware, markAsRead);
 
 
 export default router;

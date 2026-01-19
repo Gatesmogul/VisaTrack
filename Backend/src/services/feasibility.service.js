@@ -13,6 +13,40 @@ import { determineVisaRequirement } from './visaRulesEngine.service.js';
  */
 
 /**
+ * Check feasibility for a single destination
+ * Used by tripDestination.controller.js
+ */
+export function checkDestinationFeasibility({ entryDate, processingTimeMax }) {
+  const today = new Date();
+  const arrivalDate = new Date(entryDate);
+  
+  // Basic calculation: days available vs days needed
+  const procTime = processingTimeMax || 15; 
+  const processingDays = procTime * 1.4; // buffer for holidays/weekends
+  const bufferDays = 7;
+  const daysNeeded = processingDays + bufferDays;
+  
+  const daysAvailable = Math.ceil((arrivalDate - today) / (1000 * 60 * 60 * 24));
+  
+  if (daysAvailable >= daysNeeded) {
+    return {
+      status: 'FEASIBLE',
+      message: 'Sufficient time for visa processing.'
+    };
+  } else if (daysAvailable >= processingDays) {
+    return {
+      status: 'RISKY',
+      message: 'Timeline is tight. Apply immediately.'
+    };
+  } else {
+    return {
+      status: 'IMPOSSIBLE',
+      message: 'Insufficient time for standard processing.'
+    };
+  }
+}
+
+/**
  * Analyze multi-country trip feasibility
  */
 export async function analyzeMultiCountryFeasibility({
@@ -273,4 +307,7 @@ function calculateOptimalApplicationOrder(visaAnalysis) {
     }));
 }
 
-export default { analyzeMultiCountryFeasibility };
+export default { 
+  analyzeMultiCountryFeasibility,
+  checkDestinationFeasibility
+};

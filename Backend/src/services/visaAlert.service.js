@@ -1,6 +1,6 @@
 import VisaApplication from "../models/VisaApplication.js";
-import { calculateVisaTimeline } from "./timeline.service.js";
 import { sendNotification } from "./notification.service.js";
+import { calculateVisaTimeline } from "./visaTimeline.service.js";
 
 export async function evaluateVisaAlerts() {
   const today = new Date();

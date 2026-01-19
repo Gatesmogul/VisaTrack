@@ -257,6 +257,23 @@ const countries = [
     currency: 'USD',
     eVisaPortalUrl: 'https://eticket.migracion.gob.do', // e-Ticket is mandatory
     immigrationPortalUrl: 'https://www.migracion.gob.do'
+  },
+  
+  // EUROPE
+  {
+    name: 'United Kingdom',
+    isoCode: 'GB',
+    isoCode3: 'GBR',
+    continent: 'EUROPE',
+    region: 'Western Europe',
+    regionalBlocs: [],
+    defaultPassportValidityDays: 180,
+    hasEVisaSystem: false,
+    hasETASystem: true, // ETA system starting for more nationalities in 2025/2026
+    hasVOA: false,
+    yellowFeverEndemic: false,
+    currency: 'GBP',
+    immigrationPortalUrl: 'https://www.gov.uk/government/organisations/uk-visas-and-immigration'
   }
 ];
 

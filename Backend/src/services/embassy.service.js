@@ -1,11 +1,9 @@
-
-
-import Embassy from '../models/Embassy'
+import Embassy from '../models/Embassy.js';
 /**
  * Service to handle Embassy operations
  */
 
-const createEmbassy = async (data) => {
+export const createEmbassy = async (data) => {
     try {
         const embassy = new Embassy(data);
         return await embassy.save();
@@ -15,7 +13,7 @@ const createEmbassy = async (data) => {
     }
 };
 
-const getEmbassies = async (filters = {}) => {
+export const getEmbassies = async (filters = {}) => {
     try {
         return await Embassy.find(filters)
             .populate('country')
@@ -26,7 +24,7 @@ const getEmbassies = async (filters = {}) => {
     }
 };
 
-const getEmbassyById = async (id) => {
+export const getEmbassyById = async (id) => {
     try {
         return await Embassy.findById(id)
             .populate('country')
@@ -37,7 +35,7 @@ const getEmbassyById = async (id) => {
     }
 };
 
-const updateEmbassy = async (id, data) => {
+export const updateEmbassy = async (id, data) => {
     try {
         return await Embassy.findByIdAndUpdate(id, data, { new: true });
     } catch (error) {
@@ -46,19 +44,11 @@ const updateEmbassy = async (id, data) => {
     }
 };
 
-const deleteEmbassy = async (id) => {
+export const deleteEmbassy = async (id) => {
     try {
         return await Embassy.findByIdAndDelete(id);
     } catch (error) {
         console.error('Error deleting embassy:', error);
         throw error;
     }
-};
-
-module.exports = {
-    createEmbassy,
-    getEmbassies,
-    getEmbassyById,
-    updateEmbassy,
-    deleteEmbassy
 };

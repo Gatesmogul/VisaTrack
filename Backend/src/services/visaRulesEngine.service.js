@@ -32,10 +32,20 @@ export async function determineVisaRequirement(
   travelDates = {},
   userContext = {}
 ) {
+  // Normalize country codes (e.g., UK -> GB)
+  const normalizeCode = (code) => {
+    if (!code) return code;
+    const up = code.toUpperCase();
+    return up === 'UK' ? 'GB' : up;
+  };
+
+  const pCode = normalizeCode(passportCountryCode);
+  const dCode = normalizeCode(destinationCountryCode);
+
   // Step 1: Get country documents
   const [passportCountry, destinationCountry] = await Promise.all([
-    Country.findOne({ isoCode: passportCountryCode.toUpperCase() }),
-    Country.findOne({ isoCode: destinationCountryCode.toUpperCase() })
+    Country.findOne({ isoCode: pCode }),
+    Country.findOne({ isoCode: dCode })
   ]);
 
   if (!passportCountry) {

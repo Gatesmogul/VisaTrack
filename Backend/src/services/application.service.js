@@ -1,9 +1,7 @@
+import { VISA_STATUS_FLOW } from "../jobs/visaStatusFlow.js";
 import VisaApplication from "../models/VisaApplication.js";
-import VisaRequirement from "../models/VisaRequirement.js";
-import { calculateVisaTimeline } from "./visaTimeline.service.js";
 import { checkDocumentCompleteness } from "./document.service.js";
 import { sendNotification } from "./notification.service.js";
-import { VISA_STATUS_FLOW } from "../jobs/visaStatusFlow.js";
 
 const updateApplicationStatus = async (
   applicationId,
@@ -125,7 +123,6 @@ const calculateProgress = (status, completeness) => {
 
 
 export {
-  updateApplicationStatus,
-  getTrackingDetails,
- 
+    getTrackingDetails, updateApplicationStatus
 };
+

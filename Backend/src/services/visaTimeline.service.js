@@ -2,9 +2,10 @@ const DEFAULT_PROCESSING_TIME = 15;
 const SAFETY_BUFFER_DAYS = 7;
 const PREPARATION_DAYS = 14;
 
-const calculateVisaTimeline = (visaRequirement, entryDate, submissionDate = null) => {
+const calculateVisaTimeline = ({ visaRequirement, entryDate, processingTimeMax, submissionDate = null }) => {
   const targetEntryDate = new Date(entryDate);
-  const maxProcTime = visaRequirement?.processingTimeMax || DEFAULT_PROCESSING_TIME;
+  const today = new Date();
+  const maxProcTime = visaRequirement?.processingTimeMax || processingTimeMax || DEFAULT_PROCESSING_TIME;
 
   const latestSubmissionDate = new Date(targetEntryDate);
   latestSubmissionDate.setDate(
@@ -24,16 +25,24 @@ const calculateVisaTimeline = (visaRequirement, entryDate, submissionDate = null
     );
   }
 
+  // Calculate risk
+  const daysUntilTrip = Math.ceil((targetEntryDate - today) / (1000 * 60 * 60 * 24));
+  const bufferDays = SAFETY_BUFFER_DAYS;
+  const daysNeeded = maxProcTime + bufferDays;
+  
+  let risk = "LOW";
+  if (daysUntilTrip < maxProcTime) risk = "HIGH";
+  else if (daysUntilTrip < daysNeeded) risk = "TIGHT";
+
   return {
     latestSubmissionDate,
     recommendedSubmissionDate,
-    expectedDecisionDate
+    expectedDecisionDate,
+    risk
   };
 };
 
 export {
-  calculateVisaTimeline,
-  DEFAULT_PROCESSING_TIME,
-  SAFETY_BUFFER_DAYS,
-  PREPARATION_DAYS
+    DEFAULT_PROCESSING_TIME, PREPARATION_DAYS, SAFETY_BUFFER_DAYS, calculateVisaTimeline
 };
+

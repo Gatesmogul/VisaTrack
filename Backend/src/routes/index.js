@@ -13,7 +13,7 @@ export default function registerRoutes(app) {
   app.use("/api/v1", visaRoutes);
   app.use("/api/v1", visaAppRoutes);
   app.use("/api/v1", documentRoutes);
-  app.use("/api/v1", notificationRoutes);
+  app.use("/api/v1/notifications", notificationRoutes);
   app.use("/api/v1", tripRoutes);
   app.use("/api/v1", tripDestinationRoutes);
   app.use("/api/v1/embassies", embassyRoutes);
