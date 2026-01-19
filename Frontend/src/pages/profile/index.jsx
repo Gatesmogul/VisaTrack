@@ -14,13 +14,17 @@ import { useNotifications } from '../../contexts/NotificationsContext';
 import { useToast } from '../../contexts/ToastContext';
 
 const ProfileSettings = () => {
-  const { user, updateProfile, logout } = useAuth();
+  const { user, updateProfile, logout, emailVerified, sendVerificationEmail } = useAuth();
   const { preferences, updatePreferences, clearAll, notifications, subscribeToCountry, unsubscribeFromCountry, toggleCountrySubscription, isSubscribed } = useNotifications();
   const { showToast } = useToast();
 
   const location = useLocation();
   const [highlightPassports, setHighlightPassports] = useState(false);
   const [highlightPreferences, setHighlightPreferences] = useState(false);
+  
+  // Verification resend cooldown
+  const [resendCooldown, setResendCooldown] = useState(0);
+  const [verificationSending, setVerificationSending] = useState(false);
 
 
   const [form, setForm] = useState({
@@ -94,6 +98,30 @@ const ProfileSettings = () => {
     window.addEventListener('profile-focus', handler);
     return () => window.removeEventListener('profile-focus', handler);
   }, [user, preferences, location]);
+
+  useEffect(() => {
+    let timer;
+    if (resendCooldown > 0) {
+      timer = setInterval(() => {
+        setResendCooldown((prev) => prev - 1);
+      }, 1000);
+    }
+    return () => clearInterval(timer);
+  }, [resendCooldown]);
+
+  const handleResendVerification = async () => {
+    try {
+      setVerificationSending(true);
+      await sendVerificationEmail();
+      showToast({ message: 'Verification email sent!', type: 'success' });
+      setResendCooldown(120); // 2 minutes
+    } catch (error) {
+      console.error('Failed to send verification email', error);
+      showToast({ message: 'Failed to send verification email. Try again later.', type: 'error' });
+    } finally {
+      setVerificationSending(false);
+    }
+  };
 
   const handleChange = (key, value) => setForm((p) => ({ ...p, [key]: value }));
 
@@ -192,6 +220,30 @@ const ProfileSettings = () => {
       <div className="min-h-screen bg-background">
         <Header />
         <main className="max-w-4xl mx-auto px-4 md:px-6 lg:px-8 py-8">
+          
+          {!emailVerified && user && (
+             <div className="bg-yellow-500/10 border border-yellow-500/20 rounded-lg p-4 mb-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+               <div className="flex items-start gap-3">
+                 <div className="mt-1 text-yellow-500">
+                   <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+                 </div>
+                 <div>
+                   <h3 className="font-medium text-yellow-700 dark:text-yellow-400">Email not verified</h3>
+                   <p className="text-sm text-yellow-600/80 dark:text-yellow-500/80">Please verify your email address to access all features.</p>
+                 </div>
+               </div>
+               <Button 
+                 variant="outline" 
+                 size="sm" 
+                 className="whitespace-nowrap bg-yellow-500/10 hover:bg-yellow-500/20 text-yellow-700 dark:text-yellow-400 border-yellow-500/20"
+                 onClick={handleResendVerification}
+                 disabled={resendCooldown > 0 || verificationSending}
+               >
+                 {resendCooldown > 0 ? `Resend in ${Math.floor(resendCooldown / 60)}:${(resendCooldown % 60).toString().padStart(2, '0')}` : 'Resend Verification Link'}
+               </Button>
+             </div>
+          )}
+
           <h1 className="text-2xl font-heading font-semibold mb-6">Profile Settings</h1>
           <form onSubmit={handleSave} className="grid grid-cols-1 gap-6 md:grid-cols-3">
             <section className="md:col-span-2 bg-card border border-border rounded-lg p-6">

@@ -2,6 +2,7 @@ import {
     createUserWithEmailAndPassword,
     updateProfile as firebaseUpdateProfile,
     onAuthStateChanged,
+    sendEmailVerification,
     signInWithEmailAndPassword,
     signOut
 } from 'firebase/auth';
@@ -14,6 +15,7 @@ const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [token, setToken] = useState(null);
+  const [emailVerified, setEmailVerified] = useState(false);
 
   const [loading, setLoading] = useState(true);
 
@@ -33,6 +35,7 @@ export const AuthProvider = ({ children }) => {
       if (firebaseUser) {
         const idToken = await firebaseUser.getIdToken();
         setToken(idToken);
+        setEmailVerified(firebaseUser.emailVerified);
         
         // Persist token for axios interceptor
         const store = { token: idToken, user: { email: firebaseUser.email, uid: firebaseUser.uid } };
@@ -43,6 +46,7 @@ export const AuthProvider = ({ children }) => {
       } else {
         setUser(null);
         setToken(null);
+        setEmailVerified(false);
         localStorage.removeItem('auth');
         sessionStorage.removeItem('auth');
       }
@@ -57,6 +61,7 @@ export const AuthProvider = ({ children }) => {
     const idToken = await userCredential.user.getIdToken();
     
     setToken(idToken);
+    setEmailVerified(userCredential.user.emailVerified);
     const store = { token: idToken, user: { email: userCredential.user.email, uid: userCredential.user.uid } };
     if (remember) {
       localStorage.setItem('auth', JSON.stringify(store));
@@ -72,6 +77,7 @@ export const AuthProvider = ({ children }) => {
     await signOut(auth);
     setUser(null);
     setToken(null);
+    setEmailVerified(false);
     localStorage.removeItem('auth');
     sessionStorage.removeItem('auth');
   };
@@ -104,8 +110,16 @@ export const AuthProvider = ({ children }) => {
       await firebaseUpdateProfile(userCredential.user, { displayName: name });
     }
 
+    // Send verification email immediately upon registration
+    try {
+      await sendEmailVerification(userCredential.user);
+    } catch (e) {
+      console.error('Failed to send verification email on register', e);
+    }
+
     const idToken = await userCredential.user.getIdToken();
     setToken(idToken);
+    setEmailVerified(userCredential.user.emailVerified);
     
     const store = { token: idToken, user: { email: userCredential.user.email, uid: userCredential.user.uid, name: name } };
     if (remember) {
@@ -119,16 +133,26 @@ export const AuthProvider = ({ children }) => {
     return userCredential.user;
   };
 
+  const sendVerificationEmail = async () => {
+    if (auth.currentUser) {
+      await sendEmailVerification(auth.currentUser);
+    } else {
+      throw new Error('No user logged in');
+    }
+  };
+
   return (
     <AuthContext.Provider value={{ 
       user, 
       token, 
       isAuthenticated: !!token, 
+      emailVerified,
       loading,
       login, 
       logout, 
       updateProfile, 
       register,
+      sendVerificationEmail,
       refreshProfile: fetchCurrentUser 
     }}>
       {children}
