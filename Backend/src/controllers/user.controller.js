@@ -6,25 +6,22 @@ export const getMe = async (req, res) => {
   res.json({
     id: user._id,
     email: user.email,
-    name: user.fullName,
-    personal: user.personal,
-    contact: user.contact,
-    passport: user.passport,
     status: user.status,
     acceptedTerms: !!user.termsAccepted,
-    profileCompleted: user.status === USER_STATUS.PROFILE_COMPLETED,
+    profileCompleted: user.profileCompleted,
   });
 };
 
 export const acceptTerms = async (req, res) => {
   const user = req.user.dbUser;
 
-  if (user.status !== USER_STATUS.EMAIL_VERIFIED) {
-    return res.status(403).json({ message: "Invalid state" });
-  }
+  // ❗ NO email verification check here
+  // authMiddleware already guarantees validity
 
   user.termsAccepted = true;
   user.termsAcceptedAt = new Date();
+
+  // advance state safely
   user.status = USER_STATUS.PROFILE_INCOMPLETE;
 
   await user.save();
@@ -32,8 +29,13 @@ export const acceptTerms = async (req, res) => {
   res.json({ success: true });
 };
 
+
 export const savePersonalProfile = async (req, res) => {
   const user = req.user.dbUser;
+
+  if (user.status !== USER_STATUS.PROFILE_INCOMPLETE) {
+    return res.status(403).json({ message: "Invalid state" });
+  }
 
   user.personal = req.body;
   await user.save();
@@ -44,6 +46,10 @@ export const savePersonalProfile = async (req, res) => {
 export const saveContactProfile = async (req, res) => {
   const user = req.user.dbUser;
 
+  if (user.status !== USER_STATUS.PROFILE_INCOMPLETE) {
+    return res.status(403).json({ message: "Invalid state" });
+  }
+
   user.contact = req.body;
   await user.save();
 
@@ -53,10 +59,14 @@ export const saveContactProfile = async (req, res) => {
 export const savePassportProfile = async (req, res) => {
   const user = req.user.dbUser;
 
+  if (user.status !== USER_STATUS.PROFILE_INCOMPLETE) {
+    return res.status(403).json({ message: "Invalid state" });
+  }
+
   user.passport = req.body;
   user.profileCompleted = true;
   user.profileCompletedAt = new Date();
-  user.status = USER_STATUS.PROFILE_COMPLETED;
+  user.status = USER_STATUS.ACTIVE;
 
   await user.save();
 
