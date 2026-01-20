@@ -56,9 +56,10 @@ const CONTINENTS = ['AFRICA', 'ASIA', 'EUROPE', 'NORTH_AMERICA', 'SOUTH_AMERICA'
 const countrySchema = new mongoose.Schema(
   {
     name: { type: String, required: true },
-    isoCode: { type: String, required: true, unique: true },  // ISO 3166-1 alpha-2
-    isoCode3: { type: String },  // ISO 3166-1 alpha-3
+    isoCode: { type: String, required: true, unique: true },
     region: { type: String },
+ 
+    isoCode3: { type: String },  // ISO 3166-1 alpha-3
     continent: { 
       type: String, 
       enum: CONTINENTS 
@@ -89,7 +90,6 @@ const countrySchema = new mongoose.Schema(
 );
 
 // Indexes for fast lookups
-countrySchema.index({ isoCode: 1 });
 countrySchema.index({ regionalBlocs: 1 });
 countrySchema.index({ continent: 1 });
 
@@ -100,4 +100,3 @@ countrySchema.methods.isInBloc = function(blocName) {
 
 export default mongoose.model('Country', countrySchema);
 export { CONTINENTS, REGIONAL_BLOCS };
-
