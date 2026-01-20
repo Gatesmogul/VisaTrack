@@ -274,6 +274,146 @@ const countries = [
     yellowFeverEndemic: false,
     currency: 'GBP',
     immigrationPortalUrl: 'https://www.gov.uk/government/organisations/uk-visas-and-immigration'
+  },
+  {
+    name: 'United States',
+    isoCode: 'US',
+    isoCode3: 'USA',
+    continent: 'NORTH_AMERICA',
+    region: 'North America',
+    regionalBlocs: [],
+    defaultPassportValidityDays: 180,
+    hasEVisaSystem: false,
+    hasETASystem: true, // ESTA
+    hasVOA: false,
+    currency: 'USD',
+    immigrationPortalUrl: 'https://www.uscis.gov'
+  },
+  {
+    name: 'Canada',
+    isoCode: 'CA',
+    isoCode3: 'CAN',
+    continent: 'NORTH_AMERICA',
+    region: 'North America',
+    regionalBlocs: [],
+    defaultPassportValidityDays: 180,
+    hasEVisaSystem: false,
+    hasETASystem: true, // eTA
+    hasVOA: false,
+    currency: 'CAD',
+    immigrationPortalUrl: 'https://www.canada.ca/en/services/immigration-citizenship.html'
+  },
+  {
+    name: 'Germany',
+    isoCode: 'DE',
+    isoCode3: 'DEU',
+    continent: 'EUROPE',
+    region: 'Western Europe',
+    regionalBlocs: ['EU', 'SCHENGEN'],
+    defaultPassportValidityDays: 180,
+    hasEVisaSystem: false,
+    hasETASystem: false,
+    hasVOA: false,
+    currency: 'EUR',
+    immigrationPortalUrl: 'https://www.auswaertiges-amt.de/en/visa-service'
+  },
+  {
+    name: 'France',
+    isoCode: 'FR',
+    isoCode3: 'FRA',
+    continent: 'EUROPE',
+    region: 'Western Europe',
+    regionalBlocs: ['EU', 'SCHENGEN'],
+    defaultPassportValidityDays: 180,
+    hasEVisaSystem: false,
+    hasETASystem: false,
+    hasVOA: false,
+    currency: 'EUR',
+    immigrationPortalUrl: 'https://france-visas.gouv.fr/'
+  },
+  {
+    name: 'Japan',
+    isoCode: 'JP',
+    isoCode3: 'JPN',
+    continent: 'ASIA',
+    region: 'East Asia',
+    regionalBlocs: [],
+    defaultPassportValidityDays: 0, // Valid for duration of stay
+    hasEVisaSystem: true,
+    hasETASystem: false,
+    hasVOA: false,
+    currency: 'JPY',
+    immigrationPortalUrl: 'https://www.mofa.go.jp/j_info/visit/visa/index.html'
+  },
+  {
+    name: 'China',
+    isoCode: 'CN',
+    isoCode3: 'CHN',
+    continent: 'ASIA',
+    region: 'East Asia',
+    regionalBlocs: [],
+    defaultPassportValidityDays: 180,
+    hasEVisaSystem: true,
+    hasETASystem: false,
+    hasVOA: true, // Port visas
+    currency: 'CNY',
+    immigrationPortalUrl: 'https://www.nia.gov.cn/'
+  },
+  {
+    name: 'Brazil',
+    isoCode: 'BR',
+    isoCode3: 'BRA',
+    continent: 'SOUTH_AMERICA',
+    region: 'South America',
+    regionalBlocs: [],
+    defaultPassportValidityDays: 180,
+    hasEVisaSystem: true,
+    hasETASystem: false,
+    hasVOA: false,
+    currency: 'BRL',
+    immigrationPortalUrl: 'https://www.gov.br/mre/pt-br/assuntos/portal-consular/vistos/quadro-geral-de-regime-de-vistos-para-entrada-no-brasil'
+  },
+  {
+    name: 'Mexico',
+    isoCode: 'MX',
+    isoCode3: 'MEX',
+    continent: 'NORTH_AMERICA',
+    region: 'North America',
+    regionalBlocs: [],
+    defaultPassportValidityDays: 180,
+    hasEVisaSystem: true, // SAE
+    hasETASystem: false,
+    hasVOA: false,
+    currency: 'MXN',
+    immigrationPortalUrl: 'https://www.gob.mx/sre'
+  },
+  {
+    name: 'Singapore',
+    isoCode: 'SG',
+    isoCode3: 'SGP',
+    continent: 'ASIA',
+    region: 'Southeast Asia',
+    regionalBlocs: [],
+    defaultPassportValidityDays: 180,
+    hasEVisaSystem: false,
+    hasETASystem: false,
+    hasVOA: false,
+    currency: 'SGD',
+    immigrationPortalUrl: 'https://www.ica.gov.sg/'
+  },
+  {
+    name: 'South Korea',
+    isoCode: 'KR',
+    isoCode3: 'KOR',
+    continent: 'ASIA',
+    region: 'East Asia',
+    regionalBlocs: [],
+    defaultPassportValidityDays: 180,
+    hasEVisaSystem: false,
+    hasETASystem: true, // K-ETA
+    hasVOA: false,
+    currency: 'KRW',
+    immigrationPortalUrl: 'https://www.hikorea.go.kr/'
   }
 ];
 

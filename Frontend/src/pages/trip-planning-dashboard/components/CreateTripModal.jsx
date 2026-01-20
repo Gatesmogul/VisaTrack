@@ -1,46 +1,70 @@
-import React, { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Icon from '../../../components/AppIcon';
 import Button from '../../../components/ui/Button';
 import Input from '../../../components/ui/Input';
 import Select from '../../../components/ui/Select';
 
-const CreateTripModal = ({ isOpen, onClose, onCreateTrip }) => {
-  const [tripName, setTripName] = useState('');
-  const [purpose, setPurpose] = useState('');
-  const [departureDate, setDepartureDate] = useState('');
-  const [returnDate, setReturnDate] = useState('');
-  const [destinations, setDestinations] = useState([{ country: '', flag: '' }]);
+const CreateTripModal = ({ isOpen, onClose, onCreateTrip, initialData = null }) => {
+  const [tripName, setTripName] = useState(initialData?.name || '');
+  const [purpose, setPurpose] = useState(initialData?.purpose || '');
+  const [departureDate, setDepartureDate] = useState(initialData?.departureDate ? initialData.departureDate.split('T')[0] : '');
+  const [returnDate, setReturnDate] = useState(initialData?.returnDate ? initialData.returnDate.split('T')[0] : '');
+  const [destinations, setDestinations] = useState(
+    initialData?.destinations?.length 
+      ? initialData.destinations.map(d => ({ country: d.country, countryCode: d.countryCode, flag: d.flag }))
+      : [{ country: '', countryCode: '', flag: '' }]
+  );
   const [errors, setErrors] = useState({});
 
+  useEffect(() => {
+    if (initialData) {
+      setTripName(initialData.name || '');
+      setPurpose(initialData.purpose || '');
+      setDepartureDate(initialData.departureDate ? initialData.departureDate.split('T')[0] : '');
+      setReturnDate(initialData.returnDate ? initialData.returnDate.split('T')[0] : '');
+      setDestinations(
+        initialData.destinations?.length 
+          ? initialData.destinations.map(d => ({ country: d.country, countryCode: d.countryCode, flag: d.flag }))
+          : [{ country: '', countryCode: '', flag: '' }]
+      );
+    } else {
+      setTripName('');
+      setPurpose('');
+      setDepartureDate('');
+      setReturnDate('');
+      setDestinations([{ country: '', countryCode: '', flag: '' }]);
+    }
+  }, [initialData]);
+
   const countries = [
-    { value: 'france', label: 'France', flag: '🇫🇷' },
-    { value: 'germany', label: 'Germany', flag: '🇩🇪' },
-    { value: 'italy', label: 'Italy', flag: '🇮🇹' },
-    { value: 'spain', label: 'Spain', flag: '🇪🇸' },
-    { value: 'uk', label: 'United Kingdom', flag: '🇬🇧' },
-    { value: 'usa', label: 'United States', flag: '🇺🇸' },
-    { value: 'canada', label: 'Canada', flag: '🇨🇦' },
-    { value: 'japan', label: 'Japan', flag: '🇯🇵' },
-    { value: 'china', label: 'China', flag: '🇨🇳' },
-    { value: 'thailand', label: 'Thailand', flag: '🇹🇭' },
-    { value: 'vietnam', label: 'Vietnam', flag: '🇻🇳' },
-    { value: 'singapore', label: 'Singapore', flag: '🇸🇬' },
-    { value: 'australia', label: 'Australia', flag: '🇦🇺' },
-    { value: 'brazil', label: 'Brazil', flag: '🇧🇷' },
-    { value: 'india', label: 'India', flag: '🇮🇳' }
+    { value: 'us', label: 'United States', flag: '🇺🇸' },
+    { value: 'gb', label: 'United Kingdom', flag: '🇬🇧' },
+    { value: 'ca', label: 'Canada', flag: '🇨🇦' },
+    { value: 'au', label: 'Australia', flag: '🇦🇺' },
+    { value: 'de', label: 'Germany', flag: '🇩🇪' },
+    { value: 'fr', label: 'France', flag: '🇫🇷' },
+    { value: 'jp', label: 'Japan', flag: '🇯🇵' },
+    { value: 'in', label: 'India', flag: '🇮🇳' },
+    { value: 'cn', label: 'China', flag: '🇨🇳' },
+    { value: 'br', label: 'Brazil', flag: '🇧🇷' },
+    { value: 'mx', label: 'Mexico', flag: '🇲🇽' },
+    { value: 'sg', label: 'Singapore', flag: '🇸🇬' },
+    { value: 'ae', label: 'United Arab Emirates', flag: '🇦🇪' },
+    { value: 'za', label: 'South Africa', flag: '🇿🇦' },
+    { value: 'kr', label: 'South Korea', flag: '🇰🇷' }
   ];
 
   const purposeOptions = [
-    { value: 'tourism', label: 'Tourism' },
-    { value: 'business', label: 'Business' },
-    { value: 'transit', label: 'Transit' },
-    { value: 'study', label: 'Study' },
-    { value: 'work', label: 'Work' },
-    { value: 'family', label: 'Family Visit' }
+    { value: 'TOURISM', label: 'Tourism' },
+    { value: 'BUSINESS', label: 'Business' },
+    { value: 'TRANSIT', label: 'Transit' },
+    { value: 'STUDY', label: 'Study' },
+    { value: 'WORK', label: 'Work' },
+    { value: 'FAMILY_VISIT', label: 'Family Visit' }
   ];
 
   const handleAddDestination = () => {
-    setDestinations([...destinations, { country: '', flag: '' }]);
+    setDestinations([...destinations, { country: '', countryCode: '', flag: '' }]);
   };
 
   const handleRemoveDestination = (index) => {
@@ -55,6 +79,7 @@ const CreateTripModal = ({ isOpen, onClose, onCreateTrip }) => {
     const newDestinations = [...destinations];
     newDestinations[index] = {
       country: selectedCountry?.label || '',
+      countryCode: selectedCountry?.value?.toUpperCase() || '',
       flag: selectedCountry?.flag || ''
     };
     setDestinations(newDestinations);
@@ -99,21 +124,22 @@ const CreateTripModal = ({ isOpen, onClose, onCreateTrip }) => {
       return;
     }
 
-    const newTrip = {
-      id: Date.now(),
+    const tripData = {
+      title: tripName,
       name: tripName,
       purpose,
+      startDate: departureDate,
+      endDate: returnDate,
       departureDate,
       returnDate,
       destinations: destinations?.map(d => ({
         ...d,
-        visaStatus: 'not_started'
+        visaStatus: d.visaStatus || 'not_started'
       })),
-      status: 'planning',
-      createdAt: new Date()?.toISOString()
+      status: initialData?.status || 'planning'
     };
 
-    onCreateTrip(newTrip);
+    onCreateTrip(tripData);
     handleClose();
   };
 
@@ -133,7 +159,9 @@ const CreateTripModal = ({ isOpen, onClose, onCreateTrip }) => {
     <div className="fixed inset-0 z-300 flex items-center justify-center p-4 bg-black/50">
       <div className="bg-card border border-border rounded-lg shadow-elevation-5 w-full max-w-2xl max-h-[90vh] overflow-hidden flex flex-col">
         <div className="flex items-center justify-between p-4 md:p-6 border-b border-border">
-          <h2 className="text-xl md:text-2xl font-heading font-semibold text-card-foreground">Create New Trip</h2>
+          <h2 className="text-xl md:text-2xl font-heading font-semibold text-card-foreground">
+            {initialData ? 'Edit Trip' : 'Create New Trip'}
+          </h2>
           <button
             onClick={handleClose}
             className="p-2 rounded-lg text-muted-foreground hover:bg-muted transition-smooth"
@@ -244,16 +272,16 @@ const CreateTripModal = ({ isOpen, onClose, onCreateTrip }) => {
               </div>
             )}
           </div>
-        </form>
 
-        <div className="flex items-center justify-end gap-3 p-4 md:p-6 border-t border-border">
-          <Button type="button" variant="outline" onClick={handleClose}>
-            Cancel
-          </Button>
-          <Button type="submit" onClick={handleSubmit} iconName="Plus" iconPosition="left">
-            Create Trip
-          </Button>
-        </div>
+          <div className="flex items-center justify-end gap-3 p-4 md:p-6 border-t border-border mt-6">
+            <Button type="button" variant="outline" onClick={handleClose}>
+              Cancel
+            </Button>
+            <Button type="submit" loading={false} iconName={initialData ? "Save" : "Plus"} iconPosition="left">
+              {initialData ? 'Save Changes' : 'Create Trip'}
+            </Button>
+          </div>
+        </form>
       </div>
     </div>
   );

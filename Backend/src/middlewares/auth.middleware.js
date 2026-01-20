@@ -20,11 +20,30 @@ export const authMiddleware = async (req, res, next) => {
         email: decoded.email,
         fullName: decoded.name || '',
         emailVerified: decoded.email_verified || false,
+        status: decoded.email_verified ? 'EMAIL_VERIFIED' : 'NEW'
       });
-    } else if (decoded.name && !user.fullName) {
-      // Sync names if they were added later
-      user.fullName = decoded.name;
-      await user.save();
+    } else {
+      let modified = false;
+      
+      // Update email verification status if it changed
+      if (decoded.email_verified && !user.emailVerified) {
+        user.emailVerified = true;
+        
+        // Auto-transition from NEW to EMAIL_VERIFIED
+        if (user.status === 'NEW') {
+          user.status = 'EMAIL_VERIFIED';
+        }
+        modified = true;
+      }
+
+      if (decoded.name && !user.fullName) {
+        user.fullName = decoded.name;
+        modified = true;
+      }
+
+      if (modified) {
+        await user.save();
+      }
     }
 
     req.user = {

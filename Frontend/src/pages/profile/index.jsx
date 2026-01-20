@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { Helmet } from 'react-helmet';
 import { useLocation } from 'react-router-dom';
+import userApi from '../../api/user.api';
 import Button from '../../components/ui/Button';
 import { Checkbox } from '../../components/ui/Checkbox';
 import ConfirmModal from '../../components/ui/ConfirmModal';
@@ -14,7 +15,7 @@ import { useNotifications } from '../../contexts/NotificationsContext';
 import { useToast } from '../../contexts/ToastContext';
 
 const ProfileSettings = () => {
-  const { user, updateProfile, logout, emailVerified, sendVerificationEmail } = useAuth();
+  const { user, updateProfile, logout, emailVerified, sendVerificationEmail, refreshProfile } = useAuth();
   const { preferences, updatePreferences, clearAll, notifications, subscribeToCountry, unsubscribeFromCountry, toggleCountrySubscription, isSubscribed } = useNotifications();
   const { showToast } = useToast();
 
@@ -31,9 +32,6 @@ const ProfileSettings = () => {
     name: '',
     email: '',
     phone: '',
-    primaryPassport: '',
-    passportNumber: '',
-    passportExpiry: '',
     // notification prefs
     emailNotifications: true,
     smsNotifications: false,
@@ -48,8 +46,38 @@ const ProfileSettings = () => {
 
   useEffect(() => {
     if (user) {
-      setForm((f) => ({ ...f, name: user?.name || '', email: user?.email || '', phone: user?.phone || '' }));
-      if (user?.passports) setPassports(user.passports);
+      setForm((f) => ({ ...f, name: user?.name || '', email: user?.email || '', phone: user?.contact?.phone || '' }));
+      
+      // Map backend passport structure to flat frontend array
+      if (user?.passport) {
+        const mappedPassports = [];
+        
+        // Add primary passport
+        if (user.passport.passportNumber) {
+          mappedPassports.push({
+            id: 'primary',
+            country: user.passport.issuingCountry,
+            number: user.passport.passportNumber,
+            expiry: user.passport.expiryDate?.split('T')[0] || user.passport.expiryDate,
+            primary: true
+          });
+        }
+        
+        // Add additional passports
+        if (user.passport.additionalPassports?.length) {
+          user.passport.additionalPassports.forEach((p, idx) => {
+            mappedPassports.push({
+              id: `additional-${idx}`,
+              country: p.issuingCountry,
+              number: p.passportNumber,
+              expiry: p.expiryDate?.split('T')[0] || p.expiryDate,
+              primary: false
+            });
+          });
+        }
+        
+        setPassports(mappedPassports);
+      }
     }
     if (preferences) {
       setForm((f) => ({
@@ -136,7 +164,7 @@ const ProfileSettings = () => {
       }
       
       // 2. Update contact info (phone)
-      if (form.phone !== (user?.phone || '')) {
+      if (form.phone !== (user?.contact?.phone || '')) {
         await updateProfile({ phone: form.phone });
       }
 
@@ -368,17 +396,33 @@ const ProfileSettings = () => {
         isOpen={showPassportsModal}
         passports={passports}
         onClose={() => setShowPassportsModal(false)}
-        onSave={(items) => {
-          setPassports(items);
-          const primary = items.find((p) => p.primary) || items[0] || null;
-          if (primary) {
-            setForm((f) => ({ ...f, primaryPassport: primary.country, passportNumber: primary.number, passportExpiry: primary.expiry }));
-            updateProfile({ passports: items, passport: { country: primary.country, number: primary.number, expiry: primary.expiry } });
-          } else {
-            updateProfile({ passports: items });
+        onSave={async (items) => {
+          const primary = items.find((p) => p.primary) || items[0];
+          if (!primary) return;
+
+          // Transform to backend structure matching User model
+          const payload = {
+            passportNumber: primary.number,
+            issuingCountry: primary.country,
+            expiryDate: primary.expiry,
+            additionalPassports: items
+              .filter((p) => p.id !== primary.id)
+              .map((p) => ({
+                passportNumber: p.number,
+                issuingCountry: p.country,
+                expiryDate: p.expiry,
+              })),
+          };
+
+          try {
+            await userApi.updatePassportProfile(payload);
+            await refreshProfile();
+            showToast({ message: 'Passports saved successfully', type: 'success' });
+            setShowPassportsModal(false);
+          } catch (error) {
+            console.error('Failed to save passport:', error);
+            showToast({ message: 'Failed to save passport', type: 'error' });
           }
-          try { showToast({ message: 'Passports saved', type: 'success' }); } catch (e) {}
-          setShowPassportsModal(false);
         }}
       />
 

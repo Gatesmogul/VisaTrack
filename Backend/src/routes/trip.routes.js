@@ -1,8 +1,10 @@
 import express from "express";
 import {
     createTrip,
+    deleteTrip,
     getMyTrips,
     getTripById,
+    updateTrip,
     updateTripStatus
 } from "../controllers/trip.controller.js";
 import { authMiddleware } from "../middlewares/auth.middleware.js";
@@ -151,7 +153,9 @@ router.get("/trips", authMiddleware, getMyTrips);
  *         description: Trip updated
  */
 router.get("/trips/:tripId", authMiddleware, getTripById);
+router.put("/trips/:tripId", authMiddleware, updateTrip);
 router.patch("/trips/:tripId", authMiddleware, updateTripStatus);
+router.delete("/trips/:tripId", authMiddleware, deleteTrip);
 
 
 export default router;

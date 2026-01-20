@@ -38,23 +38,75 @@ const VisaRequirementsLookup = () => {
 
       const data = res.data || res;
       
+      // Build processing time strings
+      const processingStrings = [];
+      if (data.processingTime?.min && data.processingTime?.max) {
+        processingStrings.push(`Standard: ${data.processingTime.min}-${data.processingTime.max} ${data.processingTime.unit || 'business days'}`);
+      } else if (data.processingTime?.max) {
+        processingStrings.push(`Standard: Up to ${data.processingTime.max} ${data.processingTime.unit || 'business days'}`);
+      }
+
+      // Build fees strings
+      const feesStrings = [];
+      if (data.fees?.visaCost) {
+        feesStrings.push(`Visa Fee: ${data.fees.visaCost} ${data.fees.currency || 'USD'}`);
+      }
+      if (data.fees?.additionalFees?.length > 0) {
+        data.fees.additionalFees.forEach(fee => {
+          feesStrings.push(`${fee.name}: ${fee.amount} ${fee.currency || 'USD'}`);
+        });
+      }
+      if (feesStrings.length === 0) {
+        feesStrings.push('No visa fee required');
+      }
+
+      // Build documents list from API
+      const documents = data.requiredDocuments || [];
+      if (documents.length === 0) {
+        // Fallback to pre-arrival requirements if no requiredDocuments
+        if (data.preArrivalRequirements?.length > 0) {
+          data.preArrivalRequirements.forEach(r => documents.push(r.name));
+        }
+        // Add standard documents if none specified
+        if (documents.length === 0) {
+          documents.push('Valid passport', 'Completed visa application (if applicable)');
+        }
+      }
+
+      // Build restrictions list
+      const restrictions = data.restrictions || [];
+      if (data.warnings?.length > 0) {
+        data.warnings.forEach(w => restrictions.push(w.message));
+      }
+      if (data.yellowFeverRequired === 'ALWAYS') {
+        restrictions.push('Yellow fever vaccination certificate required');
+      } else if (data.yellowFeverRequired === 'CONDITIONAL') {
+        restrictions.push('Yellow fever certificate may be required (check conditions)');
+      }
+      if (data.passportValidityDays > 0) {
+        restrictions.push(`Passport must be valid for ${data.passportValidityDays} days beyond travel date`);
+      }
+      if (data.blankPagesRequired > 0) {
+        restrictions.push(`${data.blankPagesRequired} blank passport pages required`);
+      }
+      
       // Map Backend Data to UI Structure
       const result = {
         visaType: data.visaType?.toLowerCase() || 'embassy',
         status: data.visaType === 'VISA_FREE' ? 'not-required' : 'required',
         title: data.visaTypeFriendly || 'Visa Required',
-        description: data.warnings?.[0]?.message || `Visa requirements for ${data.destination?.name || destination}`,
+        description: data.notes || `Visa requirements for ${data.destination?.name || destination}`,
         details: data.preArrivalRequirements?.map(r => r.name) || [],
         requirements: {
-          documents: data.preArrivalRequirements?.map(r => r.name) || [],
-          processing: [`Standard: ${data.processingTime?.max || 'Varies'} ${data.processingTime?.unit || 'days'}`],
-          costs: [`${data.fees?.visaCost || 'Varies'} ${data.fees?.currency || ''}`],
-          restrictions: data.warnings?.map(w => w.message) || []
+          documents: documents,
+          processing: processingStrings,
+          costs: feesStrings,
+          restrictions: restrictions.length > 0 ? restrictions : ['No special restrictions']
         },
         processingTime: `${data.processingTime?.max || 'Varies'} ${data.processingTime?.unit || 'days'}`,
         cost: data.fees?.visaCost ? `${data.fees.visaCost} ${data.fees.currency}` : 'Varies',
         validity: data.allowedStayDays ? `${data.allowedStayDays} days` : 'Varies',
-        icon: data.visaType === 'VISA_FREE' ? 'CheckCircle' : (data.visaType === 'E_VISA' ? 'Globe' : 'Building'),
+        icon: data.visaType === 'VISA_FREE' ? 'CheckCircle' : (data.visaType === 'E_VISA' || data.visaType === 'ETA' ? 'Globe' : 'Building'),
         color: data.visaType === 'VISA_FREE' ? 'success' : (data.visaType === 'VISA_ON_ARRIVAL' ? 'warning' : 'primary'),
         searchParams
       };
@@ -253,11 +305,6 @@ const VisaRequirementsLookup = () => {
               />
 
               <PolicyUpdates updates={policyUpdates} />
-
-              {/* Community reviews for the current destination */}
-              {searchResults && (
-                <CommunityReviews country={getCountryName(searchResults?.searchParams?.destination)} />
-              )}
 
               <div className="bg-card border border-border rounded-lg p-4 md:p-6 shadow-elevation-2">
                 <div className="flex items-center gap-3 mb-4">

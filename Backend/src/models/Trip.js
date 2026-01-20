@@ -23,6 +23,18 @@ const tripSchema = new mongoose.Schema(
     startDate: { type: Date, required: true },
     endDate: { type: Date, required: true },
     
+    // Destinations list (Flow #1 & #5)
+    destinations: [{
+      country: String,      // Display name
+      countryCode: String,  // ISO-3166-1 alpha-2
+      flag: String,
+      visaStatus: {
+        type: String,
+        enum: ['not_started', 'pending', 'approved', 'rejected'],
+        default: 'not_started'
+      }
+    }],
+    
     // Primary purpose of trip
     purpose: {
       type: String,

@@ -1,4 +1,3 @@
-import React from 'react';
 import { Link } from 'react-router-dom';
 import Icon from '../../../components/AppIcon';
 import Button from '../../../components/ui/Button';
@@ -36,7 +35,7 @@ const TripCard = ({ trip, onEdit, onDelete }) => {
     return diffDays;
   };
 
-  const daysLeft = getDaysUntilDeparture(trip?.departureDate);
+  const daysLeft = getDaysUntilDeparture(trip?.startDate);
   const completedVisas = trip?.destinations?.filter(d => d?.visaStatus === 'approved')?.length;
   const totalVisas = trip?.destinations?.length;
   const progressPercentage = (completedVisas / totalVisas) * 100;
@@ -47,7 +46,7 @@ const TripCard = ({ trip, onEdit, onDelete }) => {
         <div className="flex items-start justify-between gap-3 mb-4">
           <div className="flex-1 min-w-0">
             <h3 className="text-lg md:text-xl font-heading font-semibold text-card-foreground mb-2 truncate">
-              {trip?.name}
+              {trip?.title}
             </h3>
             <div className="flex flex-wrap items-center gap-2 mb-3">
               <span className={`px-2 py-1 rounded-full text-xs font-medium border ${getStatusColor(trip?.status)}`}>
@@ -67,7 +66,7 @@ const TripCard = ({ trip, onEdit, onDelete }) => {
               <Icon name="Edit2" size={18} />
             </button>
             <button
-              onClick={() => onDelete(trip?.id)}
+              onClick={() => onDelete(trip?._id || trip?.id)}
               className="p-2 rounded-lg text-muted-foreground hover:bg-error/10 hover:text-error transition-smooth"
               aria-label="Delete trip"
             >
@@ -79,7 +78,7 @@ const TripCard = ({ trip, onEdit, onDelete }) => {
         <div className="space-y-3 mb-4">
           <div className="flex items-center gap-2 text-sm text-card-foreground">
             <Icon name="Calendar" size={16} className="text-muted-foreground flex-shrink-0" />
-            <span className="truncate">{formatDate(trip?.departureDate)} - {formatDate(trip?.returnDate)}</span>
+            <span className="truncate">{formatDate(trip?.startDate)} - {formatDate(trip?.endDate)}</span>
           </div>
           <div className="flex items-center gap-2 text-sm text-card-foreground">
             <Icon name="MapPin" size={16} className="text-muted-foreground flex-shrink-0" />

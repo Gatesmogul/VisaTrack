@@ -13,7 +13,7 @@ import TimelinePanel from './components/TimelinePanel';
 import TripCard from './components/TripCard';
 
 const TripPlanningDashboard = () => {
-  const { myTrips } = useTrips();
+  const { myTrips, create, update, remove } = useTrips();
   const { loading: isLoading, data, error, request: fetchTrips } = myTrips;
   const trips = data?.trips || data || [];
 
@@ -26,17 +26,42 @@ const TripPlanningDashboard = () => {
   const [filterStatus, setFilterStatus] = useState('all');
   const [showCostEstimator, setShowCostEstimator] = useState(false);
 
-  const handleCreateTrip = (newTrip) => {
-    fetchTrips();
+  const [editingTrip, setEditingTrip] = useState(null);
+
+  const handleCreateTrip = async (newTripData) => {
+    try {
+      await create.request(newTripData);
+      fetchTrips();
+      setIsCreateModalOpen(false);
+    } catch (err) {
+      console.error('Failed to create trip:', err);
+    }
   };
 
   const handleEditTrip = (trip) => {
-    console.log('Edit trip:', trip);
+    setEditingTrip(trip);
+    setIsCreateModalOpen(true);
   };
 
-  const handleDeleteTrip = (tripId) => {
+  const handleUpdateTrip = async (updatedData) => {
+    try {
+      await update.request(editingTrip._id || editingTrip.id, updatedData);
+      fetchTrips();
+      setEditingTrip(null);
+      setIsCreateModalOpen(false);
+    } catch (err) {
+      console.error('Failed to update trip:', err);
+    }
+  };
+
+  const handleDeleteTrip = async (tripId) => {
     if (window.confirm('Are you sure you want to delete this trip?')) {
-       // Ideally use useTrips.remove or similar
+      try {
+        await remove.request(tripId);
+        fetchTrips();
+      } catch (err) {
+        console.error('Failed to delete trip:', err);
+      }
     }
   };
 
@@ -136,8 +161,12 @@ const TripPlanningDashboard = () => {
       </main>
       <CreateTripModal
         isOpen={isCreateModalOpen}
-        onClose={() => setIsCreateModalOpen(false)}
-        onCreateTrip={handleCreateTrip}
+        onClose={() => {
+          setIsCreateModalOpen(false);
+          setEditingTrip(null);
+        }}
+        onCreateTrip={editingTrip ? handleUpdateTrip : handleCreateTrip}
+        initialData={editingTrip}
       />
 
       <CostEstimatorModal isOpen={showCostEstimator} onClose={() => setShowCostEstimator(false)} trips={trips} />

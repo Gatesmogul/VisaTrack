@@ -134,6 +134,9 @@ const visaRequirementSchema = new mongoose.Schema(
     },
     blankPagesRequired: { type: Number, default: 2 },
     
+    // Required documents for visa application
+    requiredDocuments: [{ type: String }],
+    
     /**
      * Eligibility Conditions - handles nationality-based exceptions
      * Examples:

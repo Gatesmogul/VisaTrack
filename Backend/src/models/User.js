@@ -52,7 +52,7 @@ const userSchema = new mongoose.Schema(
       // Additional passports (dual nationality)
       additionalPassports: [{
         passportNumber: String,
-        countryId: { type: mongoose.Schema.Types.ObjectId, ref: 'Country' },
+        issuingCountry: String,
         expiryDate: Date
       }]
     },

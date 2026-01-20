@@ -25,6 +25,19 @@ import VisaRequirement from '../models/VisaRequirement.js';
  * @param {Object} userContext - Optional: { hasValidVisaFrom: ['US', 'UK'] }
  * @returns {Object} Visa requirement result
  */
+import { normalizeCountryCode } from '../utils/country.helper.js';
+
+/**
+ * Main function: Determine visa requirement for a traveler
+ * This is the primary endpoint for Flow #1
+ * 
+ * @param {string} passportCountryCode - ISO 3166-1 alpha-2 code
+ * @param {string} destinationCountryCode - ISO 3166-1 alpha-2 code  
+ * @param {string} purpose - Travel purpose (TOURISM, BUSINESS, etc.)
+ * @param {Object} travelDates - { arrivalDate, departureDate }
+ * @param {Object} userContext - Optional: { hasValidVisaFrom: ['US', 'UK'] }
+ * @returns {Object} Visa requirement result
+ */
 export async function determineVisaRequirement(
   passportCountryCode,
   destinationCountryCode,
@@ -32,15 +45,8 @@ export async function determineVisaRequirement(
   travelDates = {},
   userContext = {}
 ) {
-  // Normalize country codes (e.g., UK -> GB)
-  const normalizeCode = (code) => {
-    if (!code) return code;
-    const up = code.toUpperCase();
-    return up === 'UK' ? 'GB' : up;
-  };
-
-  const pCode = normalizeCode(passportCountryCode);
-  const dCode = normalizeCode(destinationCountryCode);
+  const pCode = normalizeCountryCode(passportCountryCode);
+  const dCode = normalizeCountryCode(destinationCountryCode);
 
   // Step 1: Get country documents
   const [passportCountry, destinationCountry] = await Promise.all([

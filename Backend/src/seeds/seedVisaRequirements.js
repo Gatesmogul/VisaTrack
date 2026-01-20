@@ -11,7 +11,7 @@ import VisaRequirement from '../models/VisaRequirement.js';
 /**
  * Common passport countries for seeding
  */
-const commonPassports = ['US', 'GB', 'CA', 'DE', 'FR', 'IN', 'CN', 'NG', 'ZA', 'KE', 'GH'];
+const commonPassports = ['US', 'GB', 'CA', 'DE', 'FR', 'IN', 'CN', 'NG', 'ZA', 'KE', 'GH', 'AU', 'JP', 'SG', 'KR', 'BR', 'MX'];
 
 /**
  * Visa rules by destination
@@ -334,6 +334,404 @@ const visaRules = {
       }],
       notes: 'Visa-free for most nationalities. e-Ticket MANDATORY for all travelers.'
     }
+  },
+
+  // UNITED STATES (US) - ESTA / B1/B2 Visa
+  US: {
+    default: {
+      visaType: 'EMBASSY_VISA',
+      applicationMethod: 'EMBASSY',
+      applicationUrl: 'https://travel.state.gov/visa',
+      processingTimeMin: 30,
+      processingTimeMax: 120,
+      visaCost: 185,
+      allowedStayDays: 180,
+      passportValidityDays: 0, // Valid for duration of stay
+      blankPagesRequired: 2,
+      requiredDocuments: [
+        'Valid passport',
+        'DS-160 confirmation page',
+        'Passport photo (2x2 inches)',
+        'Proof of ties to home country',
+        'Bank statements (6 months)',
+        'Employment verification letter',
+        'Travel itinerary',
+        'Hotel reservations'
+      ],
+      notes: 'B1/B2 visitor visa. Long wait times (30-120 days). Interview required at embassy.'
+    },
+    GB: { 
+      visaType: 'ETA', 
+      applicationMethod: 'ONLINE',
+      applicationUrl: 'https://esta.cbp.dhs.gov',
+      visaCost: 21,
+      processingTimeMin: 0,
+      processingTimeMax: 3,
+      allowedStayDays: 90,
+      notes: 'ESTA (Electronic System for Travel Authorization). Valid 2 years, multiple entries.'
+    },
+    DE: { visaType: 'ETA', applicationMethod: 'ONLINE', visaCost: 21, processingTimeMin: 0, processingTimeMax: 3, allowedStayDays: 90 },
+    FR: { visaType: 'ETA', applicationMethod: 'ONLINE', visaCost: 21, processingTimeMin: 0, processingTimeMax: 3, allowedStayDays: 90 },
+    JP: { visaType: 'ETA', applicationMethod: 'ONLINE', visaCost: 21, processingTimeMin: 0, processingTimeMax: 3, allowedStayDays: 90 },
+    AU: { visaType: 'ETA', applicationMethod: 'ONLINE', visaCost: 21, processingTimeMin: 0, processingTimeMax: 3, allowedStayDays: 90 },
+    KR: { visaType: 'ETA', applicationMethod: 'ONLINE', visaCost: 21, processingTimeMin: 0, processingTimeMax: 3, allowedStayDays: 90 },
+    SG: { visaType: 'ETA', applicationMethod: 'ONLINE', visaCost: 21, processingTimeMin: 0, processingTimeMax: 3, allowedStayDays: 90 },
+    BR: { visaType: 'ETA', applicationMethod: 'ONLINE', visaCost: 21, processingTimeMin: 0, processingTimeMax: 3, allowedStayDays: 90 }
+  },
+
+  // CANADA (CA) - eTA / Visitor Visa
+  CA: {
+    default: {
+      visaType: 'EMBASSY_VISA',
+      applicationMethod: 'ONLINE',
+      applicationUrl: 'https://www.canada.ca/en/immigration-refugees-citizenship/services/visit-canada/apply-visitor-visa.html',
+      processingTimeMin: 14,
+      processingTimeMax: 60,
+      visaCost: 100,
+      allowedStayDays: 180,
+      passportValidityDays: 0,
+      blankPagesRequired: 1,
+      requiredDocuments: [
+        'Valid passport',
+        'Digital photo',
+        'Proof of financial support',
+        'Travel history',
+        'Invitation letter (if applicable)',
+        'Employment letter',
+        'Bank statements'
+      ],
+      notes: 'Visitor visa (TRV) required for most nationalities. Biometrics required.'
+    },
+    US: { visaType: 'VISA_FREE', visaFreeDays: 180, applicationMethod: 'NONE' },
+    GB: { visaType: 'ETA', applicationMethod: 'ONLINE', visaCost: 7, processingTimeMin: 0, processingTimeMax: 1, allowedStayDays: 180 },
+    DE: { visaType: 'ETA', applicationMethod: 'ONLINE', visaCost: 7, processingTimeMin: 0, processingTimeMax: 1, allowedStayDays: 180 },
+    FR: { visaType: 'ETA', applicationMethod: 'ONLINE', visaCost: 7, processingTimeMin: 0, processingTimeMax: 1, allowedStayDays: 180 },
+    JP: { visaType: 'ETA', applicationMethod: 'ONLINE', visaCost: 7, processingTimeMin: 0, processingTimeMax: 1, allowedStayDays: 180 },
+    AU: { visaType: 'ETA', applicationMethod: 'ONLINE', visaCost: 7, processingTimeMin: 0, processingTimeMax: 1, allowedStayDays: 180 },
+    KR: { visaType: 'ETA', applicationMethod: 'ONLINE', visaCost: 7, processingTimeMin: 0, processingTimeMax: 1, allowedStayDays: 180 },
+    SG: { visaType: 'VISA_FREE', visaFreeDays: 180, applicationMethod: 'NONE' },
+    MX: { visaType: 'ETA', applicationMethod: 'ONLINE', visaCost: 7, processingTimeMin: 0, processingTimeMax: 1, allowedStayDays: 180 }
+  },
+
+  // GERMANY (DE) - Schengen Visa
+  DE: {
+    default: {
+      visaType: 'EMBASSY_VISA',
+      applicationMethod: 'VFS_GLOBAL',
+      applicationUrl: 'https://www.auswaertiges-amt.de/en/visa-service',
+      processingTimeMin: 10,
+      processingTimeMax: 30,
+      visaCost: 90,
+      allowedStayDays: 90,
+      passportValidityDays: 90,
+      blankPagesRequired: 2,
+      requiredDocuments: [
+        'Valid passport (3 months beyond stay)',
+        'Schengen visa application form',
+        'Passport photos (35x45mm)',
+        'Travel medical insurance (30,000 EUR)',
+        'Flight reservation',
+        'Hotel booking or invitation',
+        'Bank statements (3 months)',
+        'Employment certificate',
+        'Cover letter with travel purpose'
+      ],
+      notes: 'Schengen visa. Valid for 26 Schengen countries. 90 days per 180-day period.'
+    },
+    US: { visaType: 'VISA_FREE', visaFreeDays: 90, applicationMethod: 'NONE' },
+    GB: { visaType: 'VISA_FREE', visaFreeDays: 90, applicationMethod: 'NONE' },
+    CA: { visaType: 'VISA_FREE', visaFreeDays: 90, applicationMethod: 'NONE' },
+    AU: { visaType: 'VISA_FREE', visaFreeDays: 90, applicationMethod: 'NONE' },
+    JP: { visaType: 'VISA_FREE', visaFreeDays: 90, applicationMethod: 'NONE' },
+    KR: { visaType: 'VISA_FREE', visaFreeDays: 90, applicationMethod: 'NONE' },
+    SG: { visaType: 'VISA_FREE', visaFreeDays: 90, applicationMethod: 'NONE' },
+    BR: { visaType: 'VISA_FREE', visaFreeDays: 90, applicationMethod: 'NONE' },
+    MX: { visaType: 'VISA_FREE', visaFreeDays: 90, applicationMethod: 'NONE' }
+  },
+
+  // FRANCE (FR) - Schengen Visa
+  FR: {
+    default: {
+      visaType: 'EMBASSY_VISA',
+      applicationMethod: 'VFS_GLOBAL',
+      applicationUrl: 'https://france-visas.gouv.fr',
+      processingTimeMin: 10,
+      processingTimeMax: 30,
+      visaCost: 90,
+      allowedStayDays: 90,
+      passportValidityDays: 90,
+      blankPagesRequired: 2,
+      requiredDocuments: [
+        'Valid passport (3 months beyond stay)',
+        'Schengen visa application form',
+        'Passport photos (35x45mm)',
+        'Travel medical insurance (30,000 EUR)',
+        'Flight reservation',
+        'Hotel booking or invitation',
+        'Bank statements (3 months)',
+        'Employment certificate',
+        'Cover letter with travel purpose'
+      ],
+      notes: 'Schengen visa. Valid for 26 Schengen countries. 90 days per 180-day period.'
+    },
+    US: { visaType: 'VISA_FREE', visaFreeDays: 90, applicationMethod: 'NONE' },
+    GB: { visaType: 'VISA_FREE', visaFreeDays: 90, applicationMethod: 'NONE' },
+    CA: { visaType: 'VISA_FREE', visaFreeDays: 90, applicationMethod: 'NONE' },
+    AU: { visaType: 'VISA_FREE', visaFreeDays: 90, applicationMethod: 'NONE' },
+    JP: { visaType: 'VISA_FREE', visaFreeDays: 90, applicationMethod: 'NONE' },
+    KR: { visaType: 'VISA_FREE', visaFreeDays: 90, applicationMethod: 'NONE' },
+    SG: { visaType: 'VISA_FREE', visaFreeDays: 90, applicationMethod: 'NONE' },
+    BR: { visaType: 'VISA_FREE', visaFreeDays: 90, applicationMethod: 'NONE' },
+    MX: { visaType: 'VISA_FREE', visaFreeDays: 90, applicationMethod: 'NONE' }
+  },
+
+  // JAPAN (JP)
+  JP: {
+    default: {
+      visaType: 'EMBASSY_VISA',
+      applicationMethod: 'EMBASSY',
+      applicationUrl: 'https://www.mofa.go.jp/j_info/visit/visa/index.html',
+      processingTimeMin: 5,
+      processingTimeMax: 10,
+      visaCost: 0,
+      allowedStayDays: 90,
+      passportValidityDays: 0,
+      blankPagesRequired: 1,
+      requiredDocuments: [
+        'Valid passport',
+        'Visa application form',
+        'Passport photo',
+        'Flight itinerary',
+        'Hotel reservations',
+        'Bank statements',
+        'Employment certificate',
+        'Letter of guarantee (if required)'
+      ],
+      notes: 'Japan offers visa-free entry for 68+ countries. Others need embassy visa (free of charge).'
+    },
+    US: { visaType: 'VISA_FREE', visaFreeDays: 90, applicationMethod: 'NONE' },
+    GB: { visaType: 'VISA_FREE', visaFreeDays: 90, applicationMethod: 'NONE' },
+    CA: { visaType: 'VISA_FREE', visaFreeDays: 90, applicationMethod: 'NONE' },
+    AU: { visaType: 'VISA_FREE', visaFreeDays: 90, applicationMethod: 'NONE' },
+    DE: { visaType: 'VISA_FREE', visaFreeDays: 90, applicationMethod: 'NONE' },
+    FR: { visaType: 'VISA_FREE', visaFreeDays: 90, applicationMethod: 'NONE' },
+    KR: { visaType: 'VISA_FREE', visaFreeDays: 90, applicationMethod: 'NONE' },
+    SG: { visaType: 'VISA_FREE', visaFreeDays: 90, applicationMethod: 'NONE' },
+    MX: { visaType: 'VISA_FREE', visaFreeDays: 90, applicationMethod: 'NONE' },
+    BR: { visaType: 'VISA_FREE', visaFreeDays: 90, applicationMethod: 'NONE' }
+  },
+
+  // CHINA (CN)
+  CN: {
+    default: {
+      visaType: 'EMBASSY_VISA',
+      applicationMethod: 'VISA_CENTER',
+      applicationUrl: 'https://bio.visaforchina.cn',
+      processingTimeMin: 4,
+      processingTimeMax: 10,
+      visaCost: 140,
+      allowedStayDays: 30,
+      passportValidityDays: 180,
+      blankPagesRequired: 2,
+      requiredDocuments: [
+        'Valid passport (6 months validity)',
+        'Visa application form',
+        'Passport photo (white background)',
+        'Flight itinerary',
+        'Hotel reservations',
+        'Invitation letter (business/personal)',
+        'Bank statements',
+        'Employment verification'
+      ],
+      notes: 'China L (Tourist) visa. Transit visa-free for 144 hours in select cities for 54 countries.'
+    },
+    US: { visaType: 'EMBASSY_VISA', visaCost: 185, processingTimeMin: 4, processingTimeMax: 10, allowedStayDays: 120 },
+    GB: { visaType: 'EMBASSY_VISA', visaCost: 151, processingTimeMin: 4, processingTimeMax: 10, allowedStayDays: 60 },
+    CA: { visaType: 'EMBASSY_VISA', visaCost: 140, processingTimeMin: 4, processingTimeMax: 10, allowedStayDays: 60 },
+    SG: { visaType: 'VISA_FREE', visaFreeDays: 30, applicationMethod: 'NONE', notes: 'Visa-free since Dec 2023' },
+    DE: { visaType: 'VISA_FREE', visaFreeDays: 15, applicationMethod: 'NONE', notes: 'Visa-free until Dec 2025' },
+    FR: { visaType: 'VISA_FREE', visaFreeDays: 15, applicationMethod: 'NONE', notes: 'Visa-free until Dec 2025' }
+  },
+
+  // BRAZIL (BR)
+  BR: {
+    default: {
+      visaType: 'E_VISA',
+      applicationMethod: 'ONLINE',
+      applicationUrl: 'https://www.gov.br/mre/pt-br/assuntos/portal-consular/vistos',
+      processingTimeMin: 5,
+      processingTimeMax: 10,
+      visaCost: 80,
+      allowedStayDays: 90,
+      passportValidityDays: 180,
+      blankPagesRequired: 1,
+      requiredDocuments: [
+        'Valid passport',
+        'Digital passport photo',
+        'Flight itinerary',
+        'Hotel reservation or invitation',
+        'Proof of funds',
+        'Travel insurance (optional but recommended)'
+      ],
+      notes: 'Brazil eVisa for tourism. Valid 2 years, multiple entries, 90 days per visit.'
+    },
+    US: { visaType: 'E_VISA', visaCost: 80, processingTimeMin: 5, processingTimeMax: 10, allowedStayDays: 90 },
+    CA: { visaType: 'E_VISA', visaCost: 80, processingTimeMin: 5, processingTimeMax: 10, allowedStayDays: 90 },
+    AU: { visaType: 'E_VISA', visaCost: 80, processingTimeMin: 5, processingTimeMax: 10, allowedStayDays: 90 },
+    JP: { visaType: 'E_VISA', visaCost: 80, processingTimeMin: 5, processingTimeMax: 10, allowedStayDays: 90 },
+    GB: { visaType: 'VISA_FREE', visaFreeDays: 90, applicationMethod: 'NONE' },
+    DE: { visaType: 'VISA_FREE', visaFreeDays: 90, applicationMethod: 'NONE' },
+    FR: { visaType: 'VISA_FREE', visaFreeDays: 90, applicationMethod: 'NONE' },
+    KR: { visaType: 'VISA_FREE', visaFreeDays: 90, applicationMethod: 'NONE' },
+    MX: { visaType: 'VISA_FREE', visaFreeDays: 90, applicationMethod: 'NONE' }
+  },
+
+  // MEXICO (MX)
+  MX: {
+    default: {
+      visaType: 'EMBASSY_VISA',
+      applicationMethod: 'EMBASSY',
+      applicationUrl: 'https://www.gob.mx/sre',
+      processingTimeMin: 5,
+      processingTimeMax: 15,
+      visaCost: 36,
+      allowedStayDays: 180,
+      passportValidityDays: 0,
+      blankPagesRequired: 1,
+      requiredDocuments: [
+        'Valid passport',
+        'Visa application form',
+        'Passport photo',
+        'Bank statements',
+        'Employment letter',
+        'Hotel reservations',
+        'Flight itinerary'
+      ],
+      notes: 'Mexico visa-free for many countries. Others need embassy visa or SAE (electronic authorization).'
+    },
+    US: { visaType: 'VISA_FREE', visaFreeDays: 180, applicationMethod: 'NONE' },
+    GB: { visaType: 'VISA_FREE', visaFreeDays: 180, applicationMethod: 'NONE' },
+    CA: { visaType: 'VISA_FREE', visaFreeDays: 180, applicationMethod: 'NONE' },
+    AU: { visaType: 'VISA_FREE', visaFreeDays: 180, applicationMethod: 'NONE' },
+    DE: { visaType: 'VISA_FREE', visaFreeDays: 180, applicationMethod: 'NONE' },
+    FR: { visaType: 'VISA_FREE', visaFreeDays: 180, applicationMethod: 'NONE' },
+    JP: { visaType: 'VISA_FREE', visaFreeDays: 180, applicationMethod: 'NONE' },
+    KR: { visaType: 'VISA_FREE', visaFreeDays: 180, applicationMethod: 'NONE' },
+    SG: { visaType: 'VISA_FREE', visaFreeDays: 180, applicationMethod: 'NONE' },
+    BR: { visaType: 'VISA_FREE', visaFreeDays: 180, applicationMethod: 'NONE' }
+  },
+
+  // SINGAPORE (SG)
+  SG: {
+    default: {
+      visaType: 'EMBASSY_VISA',
+      applicationMethod: 'ONLINE',
+      applicationUrl: 'https://www.ica.gov.sg/enter-depart/entry_requirements/visa_requirements',
+      processingTimeMin: 3,
+      processingTimeMax: 7,
+      visaCost: 30,
+      allowedStayDays: 30,
+      passportValidityDays: 180,
+      blankPagesRequired: 1,
+      requiredDocuments: [
+        'Valid passport (6 months validity)',
+        'Completed visa application form',
+        'Passport photo',
+        'Flight itinerary',
+        'Hotel reservations',
+        'Bank statements',
+        'Employment letter',
+        'Local sponsor/contact in Singapore'
+      ],
+      preArrivalRequirements: [{
+        type: 'SG_ARRIVAL_CARD',
+        name: 'Singapore Arrival Card (SGAC)',
+        portalUrl: 'https://eservices.ica.gov.sg/sgarrivalcard/',
+        advanceHours: 72,
+        mandatory: true,
+        cost: 0,
+        notes: 'Electronic arrival card required for all travelers'
+      }],
+      notes: 'Singapore visa-free for 160+ countries. Others need visa via local sponsor.'
+    },
+    US: { visaType: 'VISA_FREE', visaFreeDays: 90, applicationMethod: 'NONE' },
+    GB: { visaType: 'VISA_FREE', visaFreeDays: 90, applicationMethod: 'NONE' },
+    CA: { visaType: 'VISA_FREE', visaFreeDays: 90, applicationMethod: 'NONE' },
+    AU: { visaType: 'VISA_FREE', visaFreeDays: 90, applicationMethod: 'NONE' },
+    DE: { visaType: 'VISA_FREE', visaFreeDays: 90, applicationMethod: 'NONE' },
+    FR: { visaType: 'VISA_FREE', visaFreeDays: 90, applicationMethod: 'NONE' },
+    JP: { visaType: 'VISA_FREE', visaFreeDays: 90, applicationMethod: 'NONE' },
+    KR: { visaType: 'VISA_FREE', visaFreeDays: 90, applicationMethod: 'NONE' },
+    BR: { visaType: 'VISA_FREE', visaFreeDays: 30, applicationMethod: 'NONE' },
+    MX: { visaType: 'VISA_FREE', visaFreeDays: 30, applicationMethod: 'NONE' }
+  },
+
+  // SOUTH KOREA (KR) - K-ETA
+  KR: {
+    default: {
+      visaType: 'ETA',
+      applicationMethod: 'ONLINE',
+      applicationUrl: 'https://www.k-eta.go.kr',
+      processingTimeMin: 0,
+      processingTimeMax: 3,
+      visaCost: 10,
+      allowedStayDays: 90,
+      passportValidityDays: 180,
+      blankPagesRequired: 1,
+      requiredDocuments: [
+        'Valid passport',
+        'Digital passport photo',
+        'Email address',
+        'Credit/debit card for payment'
+      ],
+      notes: 'K-ETA required for visa-exempt countries. Valid 2 years, multiple entries.'
+    },
+    US: { visaType: 'VISA_FREE', visaFreeDays: 90, applicationMethod: 'NONE', notes: 'K-ETA waived until Dec 2025' },
+    GB: { visaType: 'VISA_FREE', visaFreeDays: 90, applicationMethod: 'NONE', notes: 'K-ETA waived until Dec 2025' },
+    CA: { visaType: 'VISA_FREE', visaFreeDays: 90, applicationMethod: 'NONE', notes: 'K-ETA waived until Dec 2025' },
+    AU: { visaType: 'VISA_FREE', visaFreeDays: 90, applicationMethod: 'NONE', notes: 'K-ETA waived until Dec 2025' },
+    DE: { visaType: 'VISA_FREE', visaFreeDays: 90, applicationMethod: 'NONE', notes: 'K-ETA waived until Dec 2025' },
+    FR: { visaType: 'VISA_FREE', visaFreeDays: 90, applicationMethod: 'NONE', notes: 'K-ETA waived until Dec 2025' },
+    JP: { visaType: 'VISA_FREE', visaFreeDays: 90, applicationMethod: 'NONE' },
+    SG: { visaType: 'VISA_FREE', visaFreeDays: 90, applicationMethod: 'NONE' },
+    BR: { visaType: 'VISA_FREE', visaFreeDays: 90, applicationMethod: 'NONE' },
+    MX: { visaType: 'VISA_FREE', visaFreeDays: 90, applicationMethod: 'NONE' }
+  },
+
+  // UK - United Kingdom (GB)
+  GB: {
+    default: {
+      visaType: 'EMBASSY_VISA',
+      applicationMethod: 'VFS_GLOBAL',
+      applicationUrl: 'https://www.gov.uk/standard-visitor',
+      processingTimeMin: 15,
+      processingTimeMax: 21,
+      visaCost: 115,
+      allowedStayDays: 180,
+      passportValidityDays: 0,
+      blankPagesRequired: 1,
+      requiredDocuments: [
+        'Valid passport',
+        'Completed online application',
+        'Passport photo',
+        'Bank statements (6 months)',
+        'Employment letter',
+        'Proof of accommodation',
+        'Travel itinerary',
+        'Proof of ties to home country'
+      ],
+      notes: 'UK Standard Visitor Visa. Biometrics required. ETA launching for more countries in 2025/2026.'
+    },
+    US: { visaType: 'VISA_FREE', visaFreeDays: 180, applicationMethod: 'NONE' },
+    CA: { visaType: 'VISA_FREE', visaFreeDays: 180, applicationMethod: 'NONE' },
+    AU: { visaType: 'VISA_FREE', visaFreeDays: 180, applicationMethod: 'NONE' },
+    DE: { visaType: 'VISA_FREE', visaFreeDays: 180, applicationMethod: 'NONE' },
+    FR: { visaType: 'VISA_FREE', visaFreeDays: 180, applicationMethod: 'NONE' },
+    JP: { visaType: 'VISA_FREE', visaFreeDays: 180, applicationMethod: 'NONE' },
+    KR: { visaType: 'VISA_FREE', visaFreeDays: 180, applicationMethod: 'NONE' },
+    SG: { visaType: 'VISA_FREE', visaFreeDays: 180, applicationMethod: 'NONE' },
+    BR: { visaType: 'VISA_FREE', visaFreeDays: 180, applicationMethod: 'NONE' },
+    MX: { visaType: 'VISA_FREE', visaFreeDays: 180, applicationMethod: 'NONE' }
   }
 };
 
@@ -387,6 +785,9 @@ export async function seedVisaRequirements() {
         visaFreeDays: rule.visaFreeDays,
         allowedStayDays: rule.allowedStayDays || rule.visaFreeDays,
         passportValidityDays: rule.passportValidityDays !== undefined ? rule.passportValidityDays : 180,
+        blankPagesRequired: rule.blankPagesRequired || 2,
+        requiredDocuments: rule.requiredDocuments || [],
+        restrictions: rule.restrictions || [],
         preArrivalRequirements: rule.preArrivalRequirements || [],
         yellowFeverRequired: rule.yellowFeverRequired || 'NOT_REQUIRED',
         yellowFeverConditions: rule.yellowFeverConditions || {},

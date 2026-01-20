@@ -9,6 +9,7 @@ import VisaLookup from "../models/VisaLookup.js";
 import { analyzeMultiCountryFeasibility } from "../services/feasibility.service.js";
 import { calculateTimeline, createMilestonesForApplication } from "../services/timeline.service.js";
 import { determineVisaRequirement, getVisaDetails } from "../services/visaRulesEngine.service.js";
+import { normalizeCountryCode } from "../utils/country.helper.js";
 
 /**
  * ============================================
@@ -32,16 +33,20 @@ export const lookupVisaRequirement = async (req, res) => {
       hasValidVisaFrom      // Optional: array of countries for conditional access
     } = req.body;
 
-    if (!passportCountry || !destinationCountry) {
+    const pCode = normalizeCountryCode(passportCountry);
+    const dCode = normalizeCountryCode(destinationCountry);
+
+    if (!pCode || !dCode) {
       return res.status(400).json({ 
-        error: 'passportCountry and destinationCountry are required' 
+        error: 'Invalid country codes',
+        message: 'Please provide valid passport and destination country codes.'
       });
     }
 
     // Call the rules engine
     const result = await determineVisaRequirement(
-      passportCountry,
-      destinationCountry,
+      pCode,
+      dCode,
       purpose,
       { arrivalDate, departureDate },
       { 
@@ -52,8 +57,8 @@ export const lookupVisaRequirement = async (req, res) => {
 
     // Log the lookup for history
     if (userId) {
-      const passportDoc = await Country.findOne({ isoCode: passportCountry.toUpperCase() });
-      const destDoc = await Country.findOne({ isoCode: destinationCountry.toUpperCase() });
+      const passportDoc = await Country.findOne({ isoCode: pCode });
+      const destDoc = await Country.findOne({ isoCode: dCode });
       
       await VisaLookup.create({
         user: userId,
@@ -362,10 +367,12 @@ export const calculateVisaTimeline = async (req, res) => {
       return res.status(400).json({ error: 'tripDate is required' });
     }
 
+    const normalizedDest = normalizeCountryCode(destinationCountry);
+
     const destCountry = await Country.findOne({ 
       $or: [
-        { isoCode: destinationCountry },
-        { _id: destinationCountry }
+        { isoCode: normalizedDest || destinationCountry },
+        { _id: (normalizedDest || destinationCountry).length === 24 ? destinationCountry : null }
       ]
     });
 
@@ -426,6 +433,13 @@ export const analyzeTrip = async (req, res) => {
       return res.status(400).json({ 
         error: 'passportCountry is required (either in request or user profile)' 
       });
+    }
+
+    // Normalize
+    passportCountryCode = normalizeCountryCode(passportCountryCode);
+
+    if (!passportCountryCode) {
+      return res.status(400).json({ error: 'Invalid passport country provided' });
     }
 
     const analysis = await analyzeMultiCountryFeasibility({
@@ -540,9 +554,12 @@ export const lookupVisa = async (req, res) => {
       return res.status(400).json({ error: 'Invalid country IDs' });
     }
 
+    const pCode = normalizeCountryCode(passportCountry.isoCode);
+    const dCode = normalizeCountryCode(destCountry.isoCode);
+
     const result = await determineVisaRequirement(
-      passportCountry.isoCode,
-      destCountry.isoCode,
+      pCode,
+      dCode,
       travelPurpose || 'TOURISM'
     );
 

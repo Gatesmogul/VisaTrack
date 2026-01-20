@@ -1,4 +1,5 @@
 import { USER_STATUS } from "../models/User.js";
+import { normalizeCountryCode } from "../utils/country.helper.js";
 
 export const getMe = async (req, res) => {
   const user = req.user.dbUser;
@@ -36,6 +37,12 @@ export const savePersonalProfile = async (req, res) => {
   const user = req.user.dbUser;
 
   user.personal = req.body;
+  
+  // Transition TERMS_ACCEPTED -> PROFILE_INCOMPLETE
+  if (user.status === USER_STATUS.TERMS_ACCEPTED) {
+    user.status = USER_STATUS.PROFILE_INCOMPLETE;
+  }
+  
   await user.save();
 
   res.json({ success: true });
@@ -45,6 +52,12 @@ export const saveContactProfile = async (req, res) => {
   const user = req.user.dbUser;
 
   user.contact = req.body;
+  
+  // Transition TERMS_ACCEPTED -> PROFILE_INCOMPLETE (if personal was skipped)
+  if (user.status === USER_STATUS.TERMS_ACCEPTED) {
+    user.status = USER_STATUS.PROFILE_INCOMPLETE;
+  }
+
   await user.save();
 
   res.json({ success: true });
@@ -52,11 +65,30 @@ export const saveContactProfile = async (req, res) => {
 
 export const savePassportProfile = async (req, res) => {
   const user = req.user.dbUser;
+  const passportData = req.body;
 
-  user.passport = req.body;
+  // Normalize issuing country
+  if (passportData.issuingCountry) {
+    passportData.issuingCountry = normalizeCountryCode(passportData.issuingCountry) || passportData.issuingCountry;
+  }
+
+  // Normalize additional passports
+  if (passportData.additionalPassports?.length) {
+    passportData.additionalPassports = passportData.additionalPassports.map(p => ({
+      ...p,
+      issuingCountry: normalizeCountryCode(p.issuingCountry) || p.issuingCountry
+    }));
+  }
+
+  user.passport = passportData;
   user.profileCompleted = true;
   user.profileCompletedAt = new Date();
-  user.status = USER_STATUS.PROFILE_COMPLETED;
+  
+  // Transition PROFILE_INCOMPLETE -> PROFILE_COMPLETE (standard)
+  // Also allow TERMS_ACCEPTED -> PROFILE_COMPLETE (fast-track)
+  if (user.status === USER_STATUS.PROFILE_INCOMPLETE || user.status === USER_STATUS.TERMS_ACCEPTED) {
+    user.status = USER_STATUS.PROFILE_COMPLETE;
+  }
 
   await user.save();
 

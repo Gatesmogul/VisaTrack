@@ -1,10 +1,10 @@
 import express from "express";
 import {
-    acceptTerms,
-    getMe,
-    saveContactProfile,
-    savePassportProfile,
-    savePersonalProfile,
+  acceptTerms,
+  getMe,
+  saveContactProfile,
+  savePassportProfile,
+  savePersonalProfile,
 } from "../controllers/user.controller.js";
 import { authMiddleware } from "../middlewares/auth.middleware.js";
 import { requireStatus } from "../middlewares/requireStatus.middleware.js";
@@ -35,7 +35,7 @@ const router = express.Router();
  *         status:
  *           type: string
  *           enum: [PENDING, EMAIL_VERIFIED, PROFILE_INCOMPLETE, PROFILE_COMPLETE, SUSPENDED]
- *         passportCountry:
+ *         issuingCountry:
  *           type: string
  *         residenceCountry:
  *           type: string
@@ -80,13 +80,13 @@ const router = express.Router();
  *       type: object
  *       required:
  *         - passportNumber
- *         - passportCountry
+ *         - issuingCountry
  *         - expiryDate
  *       properties:
  *         passportNumber:
  *           type: string
  *           example: "A12345678"
- *         passportCountry:
+ *         issuingCountry:
  *           type: string
  *           example: "NG"
  *         expiryDate:
@@ -162,7 +162,6 @@ router.post(
 router.post(
   "/users/profile/personal",
   authMiddleware,
-  requireStatus([USER_STATUS.PROFILE_INCOMPLETE]),
   savePersonalProfile
 );
 
@@ -188,7 +187,6 @@ router.post(
 router.post(
   "/users/profile/contact",
   authMiddleware,
-  requireStatus([USER_STATUS.PROFILE_INCOMPLETE]),
   saveContactProfile
 );
 
@@ -214,7 +212,6 @@ router.post(
 router.post(
   "/users/profile/passport",
   authMiddleware,
-  requireStatus([USER_STATUS.PROFILE_INCOMPLETE]),
   savePassportProfile
 );
 
