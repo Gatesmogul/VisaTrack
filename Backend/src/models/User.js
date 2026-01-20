@@ -1,17 +1,17 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
 const USER_STATUS = {
   NEW: "NEW",
   EMAIL_VERIFIED: "EMAIL_VERIFIED",
-  TERMS_ACCEPTED: "TERMS_ACCEPTED",
   PROFILE_INCOMPLETE: "PROFILE_INCOMPLETE",
-  PROFILE_COMPLETE: "PROFILE_COMPLETE",
+  ACTIVE: "ACTIVE",
 };
+
 
 const userSchema = new mongoose.Schema(
   {
-    authUserId: { type: String, required: true, unique: true },
-    email: { type: String, required: true, unique: true },
+    authUserId: { type: String, required: true},
+    email: { type: String, required: true },
     emailVerified: { type: Boolean, default: false },
     fullName: { type: String },
     
@@ -29,7 +29,7 @@ const userSchema = new mongoose.Schema(
     // Personal Information
     personal: {
       dob: Date,
-      gender: { type: String, enum: ['MALE', 'FEMALE', 'OTHER', 'PREFER_NOT_TO_SAY'] },
+      gender: { type: String, enum: ['Male', 'Female', 'Other', 'Prefer not to say'] },
       nationality: String,
       residence: String,
       placeOfBirth: String
@@ -141,4 +141,3 @@ userSchema.methods.getRecentTravelToCountry = function(countryIsoCode, monthsBac
 
 export default mongoose.model('User', userSchema);
 export { USER_STATUS };
-

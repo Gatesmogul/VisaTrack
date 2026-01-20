@@ -11,13 +11,25 @@ const tripDestinationSchema = new mongoose.Schema(
       enum: ['TOURISM', 'BUSINESS', 'TRANSIT', 'STUDY', 'WORK', 'DIPLOMATIC'],
       required: true
     },
-    visaRequired: Boolean,
+    visaRequired: { type: Boolean, default: false },
     visaType: String,
+
     processingTimeMin: Number,
-processingTimeMax: Number,
-    notes: String
+    processingTimeMax: Number,
+
+    /** ✅ Feasibility (persisted) */
+    feasibilityStatus: {
+      type: String,
+      enum: ["FEASIBLE", "RISKY", "IMPOSSIBLE"],
+      default: "FEASIBLE",
+    },
+
+    feasibilityReason: String,
+
+    notes: String,
   },
   { timestamps: true }
 );
 
 export default mongoose.model('TripDestination', tripDestinationSchema);
+

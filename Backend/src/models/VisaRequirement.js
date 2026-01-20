@@ -258,4 +258,3 @@ visaRequirementSchema.statics.findApplicableRule = async function(
 
 export default mongoose.model('VisaRequirement', visaRequirementSchema);
 export { APPLICATION_METHODS, PRE_ARRIVAL_TYPES, TRAVEL_PURPOSES, VISA_TYPES };
-

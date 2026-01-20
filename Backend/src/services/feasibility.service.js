@@ -1,4 +1,7 @@
 import { determineVisaRequirement } from './visaRulesEngine.service.js';
+import Trip from "../models/Trip.js";
+import VisaRequirement from "../models/VisaRequirement.js";
+
 
 /**
  * Feasibility Service
@@ -13,42 +16,18 @@ import { determineVisaRequirement } from './visaRulesEngine.service.js';
  */
 
 /**
- * Check feasibility for a single destination
- * Used by tripDestination.controller.js
- */
-export function checkDestinationFeasibility({ entryDate, processingTimeMax }) {
-  const today = new Date();
-  const arrivalDate = new Date(entryDate);
-  
-  // Basic calculation: days available vs days needed
-  const procTime = processingTimeMax || 15; 
-  const processingDays = procTime * 1.4; // buffer for holidays/weekends
-  const bufferDays = 7;
-  const daysNeeded = processingDays + bufferDays;
-  
-  const daysAvailable = Math.ceil((arrivalDate - today) / (1000 * 60 * 60 * 24));
-  
-  if (daysAvailable >= daysNeeded) {
-    return {
-      status: 'FEASIBLE',
-      message: 'Sufficient time for visa processing.'
-    };
-  } else if (daysAvailable >= processingDays) {
-    return {
-      status: 'RISKY',
-      message: 'Timeline is tight. Apply immediately.'
-    };
-  } else {
-    return {
-      status: 'IMPOSSIBLE',
-      message: 'Insufficient time for standard processing.'
-    };
-  }
-}
-
-/**
  * Analyze multi-country trip feasibility
  */
+/**
+ * Feasibility statuses (single source of truth)
+ */
+export const FEASIBILITY_STATUSES = {
+  FEASIBLE: "FEASIBLE",
+  RISKY: "RISKY",
+  IMPOSSIBLE: "IMPOSSIBLE"
+};
+
+
 export async function analyzeMultiCountryFeasibility({
   passportCountryCode,
   destinations,
@@ -66,7 +45,7 @@ export async function analyzeMultiCountryFeasibility({
   const visaAnalysis = await Promise.all(
     destinations.map(async (dest, index) => {
       try {
-        const visaResult = await determineVisaRequirement(
+        const visaResult = determineVisaRequirement(
           passportCountryCode,
           dest.countryCode,
           purpose,
@@ -307,7 +286,144 @@ function calculateOptimalApplicationOrder(visaAnalysis) {
     }));
 }
 
-export default { 
-  analyzeMultiCountryFeasibility,
-  checkDestinationFeasibility
+export default { analyzeMultiCountryFeasibility };
+
+
+
+/**
+ * Check feasibility for a single destination
+ */
+export function checkDestinationFeasibility({
+  entryDate,
+  processingTimeMax
+}) {
+  if (!processingTimeMax) {
+    return {
+      status: FEASIBILITY_STATUSES.FEASIBLE,
+      reason: "Visa not required"
+    };
+  }
+
+  const today = new Date();
+  const entry = new Date(entryDate);
+
+  const daysAvailable = Math.ceil(
+    (entry - today) / (1000 * 60 * 60 * 24)
+  );
+
+  const requiredDays = Math.ceil(processingTimeMax * 1.4) + 7;
+
+  if (daysAvailable < requiredDays) {
+    return {
+      status:
+        daysAvailable < processingTimeMax
+          ? FEASIBILITY_STATUSES.IMPOSSIBLE
+          : FEASIBILITY_STATUSES.RISKY,
+      reason: `Only ${daysAvailable} days available. Estimated ${requiredDays} days needed.`
+    };
+  }
+
+  return {
+    status: FEASIBILITY_STATUSES.FEASIBLE,
+    reason: "Sufficient time for visa processing"
+  };
+}
+
+/**
+ * Check feasibility for entire trip
+ */
+export const checkTripFeasibility = async ({
+  passportCountryId,
+  destinations,
+  tripStartDate
+}) => {
+  const issues = [];
+  let hasRisk = false;
+
+  for (const dest of destinations) {
+    const result = await checkDestinationFeasibility({
+      passportCountryId,
+      destinationCountryId: dest.countryId,
+      travelPurpose: dest.travelPurpose,
+      entryDate: dest.entryDate,
+      tripStartDate
+    });
+
+    if (result.issue) {
+      issues.push(result.issue);
+    }
+
+    if (result.status === FEASIBILITY_STATUSES.IMPOSSIBLE) {
+      return {
+        feasibilityStatus: FEASIBILITY_STATUSES.IMPOSSIBLE,
+        feasibilityIssues: issues
+      };
+    }
+
+    if (result.status === FEASIBILITY_STATUSES.RISKY) {
+      hasRisk = true;
+    }
+  }
+
+  return {
+    feasibilityStatus: hasRisk
+      ? FEASIBILITY_STATUSES.RISKY
+      : FEASIBILITY_STATUSES.FEASIBLE,
+    feasibilityIssues: issues
+  };
 };
+
+
+/**
+ * Recalculate entire trip feasibility
+ * 🔑 THIS IS THE CORE WIRING
+ */
+
+
+export async function recalculateTripFeasibility(tripId) {
+  const trip = await Trip.findById(tripId).populate("destinations");
+  if (!trip) return;
+
+  // ✅ Defensive guard: ensure destinations is always iterable
+  const destinations = Array.isArray(trip.destinations)
+    ? trip.destinations
+    : [];
+
+  let hasRisk = false;
+  const issues = [];
+
+  for (const dest of destinations) {
+    // If destinations are ObjectIds or partially populated, skip safely
+    if (!dest || typeof dest !== "object") continue;
+
+    if (!dest.visaRequired) continue;
+
+    if (dest.feasibilityStatus === FEASIBILITY_STATUSES.IMPOSSIBLE) {
+      trip.feasibilityStatus = FEASIBILITY_STATUSES.IMPOSSIBLE;
+      trip.feasibilityIssues = [
+        {
+          destination: dest.countryId,
+          message: dest.feasibilityReason,
+        },
+      ];
+      await trip.save();
+      return;
+    }
+
+    if (dest.feasibilityStatus === FEASIBILITY_STATUSES.RISKY) {
+      hasRisk = true;
+      issues.push({
+        destination: dest.countryId,
+        message: dest.feasibilityReason,
+      });
+    }
+  }
+
+  trip.feasibilityStatus = hasRisk
+    ? FEASIBILITY_STATUSES.RISKY
+    : FEASIBILITY_STATUSES.FEASIBLE;
+
+  trip.feasibilityIssues = issues;
+
+  await trip.save();
+}
