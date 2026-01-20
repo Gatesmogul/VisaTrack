@@ -59,7 +59,13 @@ export const getMyTrips = async (req, res) => {
  */
 export const getTripById = async (req, res) => {
   try {
-    const trip = await Trip.findById(req.params.tripId);
+   const user = await User.findOne({ authUserId: req.user.uid });
+
+const trip = await Trip.findOne({
+  _id: req.params.tripId,
+  userId: user._id,
+});
+
     if (!trip) {
       return res.status(404).json({ message: "Trip not found" });
     }
