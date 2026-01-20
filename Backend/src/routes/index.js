@@ -17,4 +17,8 @@ export default function registerRoutes(app) {
   app.use("/api/v1", tripRoutes);
   app.use("/api/v1", tripDestinationRoutes);
   app.use("/api/v1/embassies", embassyRoutes);
+  
+  app.get("/health", (req, res) => {
+    res.status(200).json({ status: "ok", message: "Server is healthy" });
+  });
 }
