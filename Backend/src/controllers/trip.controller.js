@@ -19,14 +19,7 @@ export const createTrip = async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
 
-    // MANDATORY: User must have PROFILE_COMPLETE status
-    if (user.status !== USER_STATUS.PROFILE_COMPLETE) {
-      return res.status(403).json({ 
-        message: "Profile incomplete", 
-        details: "You must complete your passport profile before creating a trip." 
-      });
-    }
-
+    // Check for valid passport data (required for trip creation)
     if (!user.passport || !user.passport.passportNumber) {
       return res.status(400).json({ 
         message: "Passport data missing", 
